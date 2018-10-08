@@ -3,9 +3,9 @@ package com.sdeevi.dsnalgo.trees;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -47,7 +47,7 @@ public class BinaryTreeTest {
     public void getLevelOrderTraversal_thenReturnsTraversal() {
         List<Integer> elements = sampleTree1.getLevelOrderTraversal();
 
-        assertThat(elements, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8)));
+        assertThat(elements, is(asList(1, 2, 3, 4, 5, 6, 7, 8)));
     }
 
     @Test
@@ -56,8 +56,51 @@ public class BinaryTreeTest {
         List<Integer> elementsLevel2 = sampleTree1.getLevelOrderTraversal(2);
         List<Integer> elementsLevel3 = sampleTree1.getLevelOrderTraversal(3);
 
-        assertThat(elementsLevel1, is(Arrays.asList(1)));
-        assertThat(elementsLevel2, is(Arrays.asList(2, 3)));
-        assertThat(elementsLevel3, is(Arrays.asList(4, 5, 6, 7)));
+        assertThat(elementsLevel1, is(asList(1)));
+        assertThat(elementsLevel2, is(asList(2, 3)));
+        assertThat(elementsLevel3, is(asList(4, 5, 6, 7)));
+    }
+
+    @Test
+    public void getLevelOrderTraversalUsingQueue_thenReturnsTraversal() {
+        List<Integer> elements = sampleTree1.getLevelOrderTraversalUsingQueue();
+
+        assertThat(elements, is(asList(1, 2, 3, 4, 5, 6, 7, 8)));
+    }
+
+    @Test
+    public void getVerticalLine_givenLineNumber_thenReturnsVerticalTraversal() {
+        List<Integer> verticalElements1 = sampleTree1.getVerticalLine(-2);
+        List<Integer> verticalElements2 = sampleTree1.getVerticalLine(-1);
+        List<Integer> verticalElements3 = sampleTree1.getVerticalLine(0);
+        List<Integer> verticalElements4 = sampleTree1.getVerticalLine(1);
+        List<Integer> verticalElements5 = sampleTree1.getVerticalLine(2);
+
+        assertThat(verticalElements1, is(asList(4)));
+        assertThat(verticalElements2, is(asList(2, 8)));
+        assertThat(verticalElements3, is(asList(1, 5, 6)));
+        assertThat(verticalElements4, is(asList(3)));
+        assertThat(verticalElements5, is(asList(7)));
+    }
+
+    @Test
+    public void getVerticalOrderTraversal_thenReturnsVerticalTraversal() {
+        List<Integer> verticalElements = sampleTree1.getVerticalOrderTraversal();
+
+        assertThat(verticalElements, is(asList(4, 2, 8, 1, 5, 6, 3, 7)));
+    }
+
+    @Test
+    public void getLeftView_thenReturnsLeftViewElements() {
+        List<Integer> leftViewElements = sampleTree1.getLeftView();
+
+        assertThat(leftViewElements, is(asList(1, 2, 4, 8)));
+    }
+
+    @Test
+    public void getRightView_thenReturnsRightViewElements() {
+        List<Integer> rightViewElements = sampleTree1.getRightView();
+
+        assertThat(rightViewElements, is(asList(1, 3, 7, 8)));
     }
 }
