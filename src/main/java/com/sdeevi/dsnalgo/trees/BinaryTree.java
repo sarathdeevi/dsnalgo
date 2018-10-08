@@ -1,5 +1,8 @@
 package com.sdeevi.dsnalgo.trees;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BinaryTree<T> {
     private TreeNode<T> root;
 
@@ -23,32 +26,19 @@ public class BinaryTree<T> {
         return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
     }
 
-    public void printGivenLevel(int level) {
-
+    public List<T> getLevelOrderTraversal(int level) {
+        List<T> levelOrderTraversalList = new ArrayList<>();
+        getLevelOrderTraversal(root, level, levelOrderTraversalList);
+        return levelOrderTraversalList;
     }
 
-    private void printGivenLevel(TreeNode<T> node, int level) {
+    private void getLevelOrderTraversal(TreeNode<T> node, int level, List<T> levelOrderTraversalList) {
         if (node == null) return;
-        if (level == 1) System.out.println(node.getValue());
-    }
-
-    public static void main(String[] args) {
-        BinaryTree<Integer> tree = new BinaryTree<>(1);
-        TreeNode<Integer> node1 = new TreeNode<>(2);
-        TreeNode<Integer> node2 = new TreeNode<>(3);
-        TreeNode<Integer> node3 = new TreeNode<>(4);
-        TreeNode<Integer> node4 = new TreeNode<>(5);
-        TreeNode<Integer> node5 = new TreeNode<>(6);
-        TreeNode<Integer> node6 = new TreeNode<>(7);
-        TreeNode<Integer> node7 = new TreeNode<>(8);
-        tree.getRoot().setLeft(node1);
-        tree.getRoot().setRight(node2);
-        node1.setLeft(node3);
-        node1.setRight(node4);
-        node2.setLeft(node5);
-        node2.setRight(node6);
-        node1.setLeft(node7);
-
-        System.out.println(tree.getHeight());
+        if (level == 1) {
+            levelOrderTraversalList.add(node.getValue());
+        } else {
+            getLevelOrderTraversal(node.getLeft(), level - 1, levelOrderTraversalList);
+            getLevelOrderTraversal(node.getRight(), level - 1, levelOrderTraversalList);
+        }
     }
 }
