@@ -44,6 +44,13 @@ public class BinaryTreeTest {
     }
 
     @Test
+    public void getLevelOrderTraversal_thenReturnsTraversal() {
+        List<Integer> elements = sampleTree1.getLevelOrderTraversal();
+
+        assertThat(elements, is(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8)));
+    }
+
+    @Test
     public void getLevelOrderTraversal_givenLevel_thenReturnsTraversalAtLevel() {
         List<Integer> elementsLevel1 = sampleTree1.getLevelOrderTraversal(1);
         List<Integer> elementsLevel2 = sampleTree1.getLevelOrderTraversal(2);

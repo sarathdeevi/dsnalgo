@@ -26,6 +26,14 @@ public class BinaryTree<T> {
         return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
     }
 
+    public List<T> getLevelOrderTraversal() {
+        List<T> levelOrderTraversalList = new ArrayList<>();
+        for (int i=0; i<=getHeight(); i++) {
+            levelOrderTraversalList.addAll(getLevelOrderTraversal(i));
+        }
+        return levelOrderTraversalList;
+    }
+
     public List<T> getLevelOrderTraversal(int level) {
         List<T> levelOrderTraversalList = new ArrayList<>();
         getLevelOrderTraversal(root, level, levelOrderTraversalList);
