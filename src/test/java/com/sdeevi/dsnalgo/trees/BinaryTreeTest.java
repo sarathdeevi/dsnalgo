@@ -123,4 +123,60 @@ public class BinaryTreeTest {
 
         assertThat(boundaryElements, is(asList(1, 2, 4, 8, 6, 9, 10, 7, 3)));
     }
+
+    @Test
+    public void getDiagonalTraversal_thenReturnsElementsInDiagonalTraversal() {
+        List<Integer> diagonalTraversalElements = sampleTree1.getDiagonalTraversal();
+
+        assertThat(diagonalTraversalElements, is(asList(1, 3, 7, 10, 2, 5, 6, 9, 4, 8)));
+    }
+
+    @Test
+    public void getLevelOrderTraversalSpiral_thenReturnsLevelOrderSpiral() {
+        List<Integer> levelOrderTraversalSpiral = sampleTree1.getLevelOrderTraversalSpiral();
+
+        assertThat(levelOrderTraversalSpiral, is(asList(1, 2, 3, 7, 6, 5, 4, 8, 9, 10)));
+    }
+
+    @Test
+    public void getPreOrderTraversal_thenReturnsPreOrderTraversal() {
+        List<Integer> preOrderTraversal = sampleTree1.getPreOrderTraversal();
+
+        assertThat(preOrderTraversal, is(asList(1, 2, 4, 5, 8, 3, 6, 7, 9, 10)));
+    }
+
+    @Test
+    public void getPreOrderTraversalIterative_thenReturnsPreOrderTraversal() {
+        List<Integer> preOrderTraversal = sampleTree1.getPreOrderTraversalIterative();
+
+        assertThat(preOrderTraversal, is(asList(1, 2, 4, 5, 8, 3, 6, 7, 9, 10)));
+    }
+
+    @Test
+    public void getInOrderTraversal_thenReturnsInOrderTraversal() {
+        List<Integer> inOrderTraversal = sampleTree1.getInOrderTraversal();
+
+        assertThat(inOrderTraversal, is(asList(4, 2, 8, 5, 1, 6, 3, 9, 7, 10)));
+    }
+
+    @Test
+    public void getInOrderTraversalIterative_thenReturnsInOrderTraversal() {
+        List<Integer> inOrderTraversal = sampleTree1.getInOrderTraversalIterative();
+
+        assertThat(inOrderTraversal, is(asList(4, 2, 8, 5, 1, 6, 3, 9, 7, 10)));
+    }
+
+    @Test
+    public void getPostOrderTraversal_thenReturnsPostOrderTraversal() {
+        List<Integer> postOrderTraversal = sampleTree1.getPostOrderTraversal();
+
+        assertThat(postOrderTraversal, is(asList(4, 8, 5, 2, 6, 9, 10, 7, 3, 1)));
+    }
+
+    @Test
+    public void getPostOrderTraversalIterative_thenReturnsPostOrderTraversal() {
+        List<Integer> postOrderTraversal = sampleTree1.getPostOrderTraversalIterative();
+
+        assertThat(postOrderTraversal, is(asList(4, 8, 5, 2, 6, 9, 10, 7, 3, 1)));
+    }
 }
