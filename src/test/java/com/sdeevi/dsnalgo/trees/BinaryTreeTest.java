@@ -103,4 +103,18 @@ public class BinaryTreeTest {
 
         assertThat(rightViewElements, is(asList(1, 3, 7, 8)));
     }
+
+    @Test
+    public void getTopView_thenReturnsTopViewElements() {
+        List<Integer> topViewElements = sampleTree1.getTopView();
+
+        assertThat(topViewElements, is(asList(1, 2, 4, 3, 7)));
+    }
+
+    @Test
+    public void getBoundaryTraversal_thenReturnsAllBoundaryElements() {
+        List<Integer> boundaryElements = sampleTree1.getTopView();
+
+        assertThat(boundaryElements, is(asList(1, 2, 4, 8, 6, 3, 7)));
+    }
 }

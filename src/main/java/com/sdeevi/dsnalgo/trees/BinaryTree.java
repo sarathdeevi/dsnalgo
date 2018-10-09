@@ -149,4 +149,57 @@ public class BinaryTree<T> {
         getRightView(node.getRight(), rightViewElements, currLevel + 1, maxLevel);
         getRightView(node.getLeft(), rightViewElements, currLevel + 1, maxLevel);
     }
+
+    public List<T> getBoundaryTraversal() {
+        List<T> boundaryElements = new ArrayList<>();
+
+        if (Objects.nonNull(root)) {
+            getLeftBoundary(root, boundaryElements, false);
+        }
+
+        if (Objects.nonNull(root) && Objects.nonNull(root.getRight())) {
+            getRightBoundary(root.getRight(), boundaryElements, false);
+        }
+        return boundaryElements;
+    }
+
+    public List<T> getTopView() {
+        List<T> boundaryElements = new ArrayList<>();
+
+        getLeftBoundary(root, boundaryElements, true);
+        getLeaves(root, boundaryElements);
+        if (Objects.nonNull(root) && Objects.nonNull(root.getRight())) {
+            getRightBoundary(root.getRight(), boundaryElements, true);
+        }
+        return boundaryElements;
+    }
+
+    private void getLeftBoundary(TreeNode<T> node, List<T> boundaryElements, boolean includeLeaf) {
+        if (node == null) return;
+        if (includeLeaf || Objects.isNull(node.getLeft())) {
+            boundaryElements.add(node.getValue());
+        }
+        if (Objects.nonNull(node.getLeft())) {
+            getLeftBoundary(node.getLeft(), boundaryElements, includeLeaf);
+        }
+    }
+
+    private void getRightBoundary(TreeNode<T> node, List<T> boundaryElements, boolean includeLeaf) {
+        if (node == null) return;
+        if (includeLeaf || Objects.isNull(node.getRight())) {
+            boundaryElements.add(node.getValue());
+        }
+        if (Objects.nonNull(node.getRight())) {
+            getRightBoundary(node.getRight(), boundaryElements, includeLeaf);
+        }
+    }
+
+    private void getLeaves(TreeNode<T> node, List<T> elements) {
+        if (node == null) return;
+        if (node.getLeft() == null && node.getRight() == null) {
+            elements.add(node.getValue());
+            getLeaves(node.getLeft(), elements);
+            getLeaves(node.getRight(), elements);
+        }
+    }
 }
