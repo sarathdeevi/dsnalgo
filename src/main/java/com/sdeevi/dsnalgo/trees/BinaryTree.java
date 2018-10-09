@@ -1,6 +1,11 @@
 package com.sdeevi.dsnalgo.trees;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BinaryTree<T> {
@@ -156,10 +161,13 @@ public class BinaryTree<T> {
         if (Objects.nonNull(root)) {
             getLeftBoundary(root, boundaryElements, false);
         }
-
+        getLeaves(root, boundaryElements);
+        List<T> rightBoundary = new ArrayList<>();
         if (Objects.nonNull(root) && Objects.nonNull(root.getRight())) {
-            getRightBoundary(root.getRight(), boundaryElements, false);
+            getRightBoundary(root.getRight(), rightBoundary, false);
         }
+        Collections.reverse(rightBoundary);
+        boundaryElements.addAll(rightBoundary);
         return boundaryElements;
     }
 
@@ -167,7 +175,6 @@ public class BinaryTree<T> {
         List<T> boundaryElements = new ArrayList<>();
 
         getLeftBoundary(root, boundaryElements, true);
-        getLeaves(root, boundaryElements);
         if (Objects.nonNull(root) && Objects.nonNull(root.getRight())) {
             getRightBoundary(root.getRight(), boundaryElements, true);
         }
@@ -176,7 +183,9 @@ public class BinaryTree<T> {
 
     private void getLeftBoundary(TreeNode<T> node, List<T> boundaryElements, boolean includeLeaf) {
         if (node == null) return;
-        if (includeLeaf || Objects.isNull(node.getLeft())) {
+        if (includeLeaf) {
+            boundaryElements.add(node.getValue());
+        } else if (Objects.nonNull(node.getLeft()) || Objects.nonNull(node.getRight())) {
             boundaryElements.add(node.getValue());
         }
         if (Objects.nonNull(node.getLeft())) {
@@ -186,7 +195,9 @@ public class BinaryTree<T> {
 
     private void getRightBoundary(TreeNode<T> node, List<T> boundaryElements, boolean includeLeaf) {
         if (node == null) return;
-        if (includeLeaf || Objects.isNull(node.getRight())) {
+        if (includeLeaf) {
+            boundaryElements.add(node.getValue());
+        } else if (Objects.nonNull(node.getLeft()) || Objects.nonNull(node.getRight())) {
             boundaryElements.add(node.getValue());
         }
         if (Objects.nonNull(node.getRight())) {
@@ -198,8 +209,8 @@ public class BinaryTree<T> {
         if (node == null) return;
         if (node.getLeft() == null && node.getRight() == null) {
             elements.add(node.getValue());
-            getLeaves(node.getLeft(), elements);
-            getLeaves(node.getRight(), elements);
         }
+        getLeaves(node.getLeft(), elements);
+        getLeaves(node.getRight(), elements);
     }
 }
