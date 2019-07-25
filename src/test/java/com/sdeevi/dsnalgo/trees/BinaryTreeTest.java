@@ -167,13 +167,6 @@ public class BinaryTreeTest {
     }
 
     @Test
-    public void getLevelOrderTraversalSpiral_thenReturnsLevelOrderSpiral() {
-        List<Integer> levelOrderTraversalSpiral = sampleTree1.getLevelOrderTraversalSpiral();
-
-        assertThat(levelOrderTraversalSpiral, is(asList(1, 2, 3, 7, 6, 5, 4, 8, 9, 10)));
-    }
-
-    @Test
     public void getPreOrderTraversal_thenReturnsPreOrderTraversal() {
         List<Integer> preOrderTraversal = sampleTree1.getPreOrderTraversal();
 

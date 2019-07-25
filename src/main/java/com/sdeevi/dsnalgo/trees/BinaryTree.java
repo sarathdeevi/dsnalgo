@@ -252,16 +252,6 @@ public class BinaryTree {
         getDiagonalTraversal(node.right, slopeElementMap, slope);
     }
 
-    public List<Integer> getLevelOrderTraversalSpiral() {
-        List<Integer> levelOrderElements = new ArrayList<>();
-        boolean leftToRight = true;
-        for (int i = 0; i <= getHeight(); i++) {
-            levelOrderElements.addAll(getLevelOrderTraversal(i, leftToRight));
-            leftToRight = !leftToRight;
-        }
-        return levelOrderElements;
-    }
-
     public List<Integer> getPreOrderTraversal() {
         List<Integer> preOrderElements = new ArrayList<>();
         getPreOrderTraversal(root, preOrderElements);
