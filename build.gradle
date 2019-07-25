@@ -6,6 +6,8 @@ repositories {
 apply plugin: 'java'
 
 dependencies {
+    compile group: 'com.google.collections', name: 'google-collections', version: '1.0-rc2'
+
     testCompile('junit:junit:4.12'){
         exclude group: 'org.hamcrest'
     }
