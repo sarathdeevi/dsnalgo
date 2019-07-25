@@ -510,6 +510,28 @@ public class BinaryTree {
         return -1;
     }
 
+    public String getNodesWithKLeaves(int k) {
+        List<Integer> elements = new ArrayList<>();
+        kLeaves(root, k, elements);
+        return elements.toString();
+    }
+
+    private int kLeaves(Node n, int k, List<Integer> elements) {
+        if (n == null) return 0;
+        if (n.left == null && n.right == null) {
+            if (k == 0) {
+                elements.add(n.data);
+            }
+            return 1;
+        }
+
+        int total = kLeaves(n.left, k, elements) + kLeaves(n.right, k, elements);
+        if (k == total) {
+            elements.add(n.data);
+        }
+        return total;
+    }
+
     public static class Node {
 
         public Node left;

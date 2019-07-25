@@ -21,10 +21,10 @@ public class BinaryTreeTest {
     @Before
     public void setUp() {
         /*
-                            1
-                       2            3
-                   4      5      6     7
-                            8        9     10
+                              1
+                         2          3
+                      4   5       6   7
+                            8        9 10
         */
         sampleTree1 = new BinaryTree(1);
         Node node2 = new Node(2);
@@ -229,5 +229,15 @@ public class BinaryTreeTest {
     public void printNodesAtDistanceForGivenNode_thenPrintsNodesAtDistance() {
         assertThat(sampleTree1.printNodesAtDistanceForTargetNode(distanceTestNode1, 2), is("[8, 3]"));
         assertThat(sampleTree1.printNodesAtDistanceForTargetNode(distanceTestNode2, 1), is("[6, 7, 1]"));
+    }
+
+    @Test
+    public void printIfNodesHaveKLeaves_thenPrintsNodesWithKLeaves() {
+        assertThat(sampleTree1.getNodesWithKLeaves(0), is("[4, 8, 6, 9, 10]"));
+        assertThat(sampleTree1.getNodesWithKLeaves(1), is("[5]"));
+        assertThat(sampleTree1.getNodesWithKLeaves(2), is("[2, 7]"));
+        assertThat(sampleTree1.getNodesWithKLeaves(3), is("[3]"));
+        assertThat(sampleTree1.getNodesWithKLeaves(4), is("[]"));
+        assertThat(sampleTree1.getNodesWithKLeaves(5), is("[1]"));
     }
 }
