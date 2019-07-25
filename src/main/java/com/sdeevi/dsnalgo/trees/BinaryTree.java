@@ -11,8 +11,6 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 public class BinaryTree {
     private final ThreadLocal<Integer> sum = new ThreadLocal<>();
@@ -28,7 +26,7 @@ public class BinaryTree {
     }
 
     private int getHeight(Node node) {
-        if (isNull(node)) return 0;
+        if (node == null) return 0;
         int leftHeight = getHeight(node.left);
         int rightHeight = getHeight(node.right);
 
@@ -64,7 +62,7 @@ public class BinaryTree {
     }
 
     private void getLevelOrderTraversal(Node node, int level, List<Integer> levelOrderTraversalList, boolean leftToRight) {
-        if (isNull(node)) return;
+        if (node == null) return;
         if (level == 1) {
             levelOrderTraversalList.add(node.data);
         } else {
@@ -79,7 +77,7 @@ public class BinaryTree {
     }
 
     public List<Integer> getLevelOrderTraversalUsingQueue() {
-        if (isNull(root)) {
+        if (root == null) {
             return new ArrayList<>();
         }
         List<Integer> elements = new ArrayList<>();
@@ -90,10 +88,10 @@ public class BinaryTree {
             Node temp = queue.poll();
             elements.add(temp.data);
 
-            if (nonNull(temp.left)) {
+            if (temp.left != null) {
                 queue.add(temp.left);
             }
-            if (nonNull(temp.right)) {
+            if (temp.right != null) {
                 queue.add(temp.right);
             }
         }
@@ -106,7 +104,7 @@ public class BinaryTree {
     }
 
     private List<Integer> getVerticalLine(Node node, List<Integer> values, int line_num, int curr) {
-        if (nonNull(node)) {
+        if (node != null) {
             if (curr == line_num) {
                 values.add(node.data);
             }
@@ -129,7 +127,7 @@ public class BinaryTree {
     }
 
     private void findMinMax(Node node, AtomicInteger min, AtomicInteger max, int curr) {
-        if (isNull(node)) return;
+        if (node == null) return;
         if (curr < min.get()) {
             min.set(curr);
         } else if (curr > max.get()) {
@@ -148,7 +146,7 @@ public class BinaryTree {
     }
 
     private void getLeftView(Node node, List<Integer> leftViewElements, int currLevel, AtomicInteger maxLevel) {
-        if (isNull(node)) return;
+        if (node == null) return;
 
         if (maxLevel.get() < currLevel) {
             leftViewElements.add(node.data);
@@ -167,7 +165,7 @@ public class BinaryTree {
     }
 
     private void getRightView(Node node, List<Integer> rightViewElements, int currLevel, AtomicInteger maxLevel) {
-        if (isNull(node)) return;
+        if (node == null) return;
 
         if (maxLevel.get() < currLevel) {
             rightViewElements.add(node.data);
@@ -181,12 +179,12 @@ public class BinaryTree {
     public List<Integer> getBoundaryTraversal() {
         List<Integer> boundaryElements = new ArrayList<>();
 
-        if (nonNull(root)) {
+        if (root != null) {
             getLeftBoundary(root, boundaryElements, false);
         }
         getLeaves(root, boundaryElements);
         List<Integer> rightBoundary = new ArrayList<>();
-        if (nonNull(root) && nonNull(root.right)) {
+        if (root != null && root.right != null) {
             getRightBoundary(root.right, rightBoundary, false);
         }
         Collections.reverse(rightBoundary);
@@ -198,39 +196,39 @@ public class BinaryTree {
         List<Integer> boundaryElements = new ArrayList<>();
 
         getLeftBoundary(root, boundaryElements, true);
-        if (nonNull(root) && nonNull(root.right)) {
+        if (root != null && root.right != null) {
             getRightBoundary(root.right, boundaryElements, true);
         }
         return boundaryElements;
     }
 
     private void getLeftBoundary(Node node, List<Integer> boundaryElements, boolean includeLeaf) {
-        if (isNull(node)) return;
+        if (node == null) return;
         if (includeLeaf) {
             boundaryElements.add(node.data);
-        } else if (nonNull(node.left) || nonNull(node.right)) {
+        } else if (node.left != null || node.right != null) {
             boundaryElements.add(node.data);
         }
-        if (nonNull(node.left)) {
+        if (node.left != null) {
             getLeftBoundary(node.left, boundaryElements, includeLeaf);
         }
     }
 
     private void getRightBoundary(Node node, List<Integer> boundaryElements, boolean includeLeaf) {
-        if (isNull(node)) return;
+        if (node == null) return;
         if (includeLeaf) {
             boundaryElements.add(node.data);
-        } else if (nonNull(node.left) || nonNull(node.right)) {
+        } else if (node.left != null || node.right != null) {
             boundaryElements.add(node.data);
         }
-        if (nonNull(node.right)) {
+        if (node.right != null) {
             getRightBoundary(node.right, boundaryElements, includeLeaf);
         }
     }
 
     private void getLeaves(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
-        if (isNull(node.left) && isNull(node.right)) {
+        if (node == null) return;
+        if (node.left == null && node.right == null) {
             elements.add(node.data);
         }
         getLeaves(node.left, elements);
@@ -244,7 +242,7 @@ public class BinaryTree {
     }
 
     private void getDiagonalTraversal(Node node, Map<Integer, List<Integer>> slopeElementMap, int slope) {
-        if (isNull(node)) return;
+        if (node == null) return;
         if (!slopeElementMap.containsKey(slope)) {
             slopeElementMap.put(slope, new ArrayList<>());
         }
@@ -271,7 +269,7 @@ public class BinaryTree {
     }
 
     private void getPreOrderTraversal(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         elements.add(node.data);
         getPreOrderTraversal(node.left, elements);
         getPreOrderTraversal(node.right, elements);
@@ -284,7 +282,7 @@ public class BinaryTree {
     }
 
     private void getPreOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         Stack<Node> stack = new Stack<>();
 
         stack.push(node);
@@ -293,10 +291,10 @@ public class BinaryTree {
             Node currNode = stack.pop();
             elements.add(currNode.data);
 
-            if (nonNull(currNode.right)) {
+            if (currNode.right != null) {
                 stack.push(currNode.right);
             }
-            if (nonNull(currNode.left)) {
+            if (currNode.left != null) {
                 stack.push(currNode.left);
             }
         }
@@ -309,7 +307,7 @@ public class BinaryTree {
     }
 
     private void getInOrderTraversal(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         getInOrderTraversal(node.left, elements);
         elements.add(node.data);
         getInOrderTraversal(node.right, elements);
@@ -322,7 +320,7 @@ public class BinaryTree {
     }
 
     private void getInOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         Stack<Node> stack = new Stack<>();
 
         Node curr = node;
@@ -345,7 +343,7 @@ public class BinaryTree {
     }
 
     private void getPostOrderTraversal(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         getPostOrderTraversal(node.left, elements);
         getPostOrderTraversal(node.right, elements);
         elements.add(node.data);
@@ -358,7 +356,7 @@ public class BinaryTree {
     }
 
     private void getPostOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (isNull(node)) return;
+        if (node == null) return;
         Stack<Node> stack = new Stack<>();
 
         Node curr = node;
