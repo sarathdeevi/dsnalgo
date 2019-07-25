@@ -15,6 +15,8 @@ import static org.junit.Assert.assertThat;
 public class BinaryTreeTest {
 
     private BinaryTree sampleTree1;
+    private Node distanceTestNode1;
+    private Node distanceTestNode2;
 
     @Before
     public void setUp() {
@@ -25,24 +27,27 @@ public class BinaryTreeTest {
                             8        9     10
         */
         sampleTree1 = new BinaryTree(1);
-        Node node1 = new Node(2);
-        Node node2 = new Node(3);
-        Node node3 = new Node(4);
-        Node node4 = new Node(5);
-        Node node5 = new Node(6);
-        Node node6 = new Node(7);
-        Node node7 = new Node(8);
-        Node node8 = new Node(9);
-        Node node9 = new Node(10);
-        sampleTree1.root.left = node1;
-        sampleTree1.root.right = node2;
-        node1.left = node3;
-        node1.right = node4;
-        node2.left = node5;
-        node2.right = node6;
-        node4.left = node7;
-        node6.left = node8;
-        node6.right = node9;
+        Node node2 = new Node(2);
+        Node node3 = new Node(3);
+        Node node4 = new Node(4);
+        Node node5 = new Node(5);
+        Node node6 = new Node(6);
+        Node node7 = new Node(7);
+        Node node8 = new Node(8);
+        Node node9 = new Node(9);
+        Node node10 = new Node(10);
+        sampleTree1.root.left = node2;
+        sampleTree1.root.right = node3;
+        node2.left = node4;
+        node2.right = node5;
+        node3.left = node6;
+        node3.right = node7;
+        node5.left = node8;
+        node7.left = node9;
+        node7.right = node10;
+
+        distanceTestNode1 = node2;
+        distanceTestNode2 = node3;
     }
 
     @Test
@@ -208,5 +213,21 @@ public class BinaryTreeTest {
         List<Integer> postOrderTraversal = sampleTree1.getPostOrderTraversalIterative();
 
         assertThat(postOrderTraversal, is(asList(4, 8, 5, 2, 6, 9, 10, 7, 3, 1)));
+    }
+
+    @Test
+    public void printNodesAtDistance_thenPrintsNodesAtDistance() {
+        assertThat(sampleTree1.printNodesAtDistance(2), is("[4, 5, 6, 7]"));
+    }
+
+    @Test
+    public void printNodesAtDistanceIterative_thenPrintsNodesAtDistance() {
+        assertThat(sampleTree1.printNodesAtDistanceIterative(2), is("[4, 5, 6, 7]"));
+    }
+
+    @Test
+    public void printNodesAtDistanceForGivenNode_thenPrintsNodesAtDistance() {
+        assertThat(sampleTree1.printNodesAtDistanceForTargetNode(distanceTestNode1, 2), is("[8, 3]"));
+        assertThat(sampleTree1.printNodesAtDistanceForTargetNode(distanceTestNode2, 1), is("[6, 7, 1]"));
     }
 }

@@ -8,6 +8,35 @@ import java.util.Arrays;
 
 public class ArrayPractice {
 
+    public static void rotateArrayOrderNk(int[] a, int k) {
+        while (k > 0) {
+            int i;
+            int temp = a[0];
+            for (i = 0; i < a.length - 1; i++) {
+                a[i] = a[i + 1];
+            }
+            a[i] = temp;
+            k--;
+        }
+    }
+
+    public static void rotateArrayOrderN(int[] a, int k) {
+        reverseArray(a, 0, k - 1);
+        reverseArray(a, k, a.length - 1);
+        reverseArray(a, 0, a.length - 1);
+    }
+
+    private static void reverseArray(int[] a, int start, int end) {
+        int temp;
+        while (start < end) {
+            temp = a[start];
+            a[start] = a[end];
+            a[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
     public static int getTrappedRainWater(int[] elevationMap) {
         int n = elevationMap.length;
         int[] left = new int[n];

@@ -386,22 +386,22 @@ public class BinaryTree {
     }
 
     public String printRootToLeafPaths() {
-        stack.set(new Stack());
+        stack.set(new Stack<>());
         StringBuilder sb = new StringBuilder();
-        printRootToLeafPaths(root, sb);
+        populateRootToLeafPaths(root, sb);
         return sb.toString();
     }
 
-    private void printRootToLeafPaths(Node node, StringBuilder sb) {
+    private void populateRootToLeafPaths(Node node, StringBuilder sb) {
         if (node == null) {
             return;
         }
         stack.get().push(node.data);
-        printRootToLeafPaths(node.left, sb);
+        populateRootToLeafPaths(node.left, sb);
         if (node.left == null && node.right == null) {
             sb.append(stack.get().toString());
         }
-        printRootToLeafPaths(node.right, sb);
+        populateRootToLeafPaths(node.right, sb);
         stack.get().pop();
     }
 
@@ -410,11 +410,11 @@ public class BinaryTree {
         stack.set(new Stack<>());
         StringBuilder sb = new StringBuilder();
         Node node = root;
-        printPathsWithGivenSum(node, sum, sb);
+        populatePathsWithGivenSum(node, sum, sb);
         return sb.toString();
     }
 
-    private void printPathsWithGivenSum(Node node, Integer sum, StringBuilder sb) {
+    private void populatePathsWithGivenSum(Node node, Integer sum, StringBuilder sb) {
         if (node == null) {
             return;
         }
@@ -424,10 +424,90 @@ public class BinaryTree {
         if (this.sum.get().equals(sum)) {
             sb.append(stack.get().toString());
         }
-        printPathsWithGivenSum(node.left, sum, sb);
-        printPathsWithGivenSum(node.right, sum, sb);
+        populatePathsWithGivenSum(node.left, sum, sb);
+        populatePathsWithGivenSum(node.right, sum, sb);
         this.sum.set(this.sum.get() - value);
         stack.get().pop();
+    }
+
+    public String printNodesAtDistanceIterative(int distance) {
+        List<Integer> elements = new ArrayList<>();
+        if (root != null) {
+            Queue<Node> q = new LinkedList<>();
+            q.add(root);
+            q.add(null);
+            int level = 0;
+            while (q.size() > 0) {
+                Node temp = q.remove();
+
+                if (level == distance && temp != null) {
+                    elements.add(temp.data);
+                }
+                if (temp == null) {
+                    if (q.peek() != null) q.add(null);
+                    level += 1;
+
+                    if (level > distance) break;
+                } else {
+                    if (temp.left != null) {
+                        q.add(temp.left);
+                    }
+                    if (temp.right != null) {
+                        q.add(temp.right);
+                    }
+                }
+            }
+        }
+        return elements.toString();
+    }
+
+    public String printNodesAtDistance(int distance) {
+        List<Integer> elements = new ArrayList<>();
+        populateNodesAtDistanceDown(root, distance, elements);
+        return elements.toString();
+    }
+
+    private void populateNodesAtDistanceDown(Node n, int distance, List<Integer> elements) {
+        if (n == null) return;
+        if (distance == 0) elements.add(n.data);
+        else {
+            populateNodesAtDistanceDown(n.left, distance - 1, elements);
+            populateNodesAtDistanceDown(n.right, distance - 1, elements);
+        }
+    }
+
+    public String printNodesAtDistanceForTargetNode(Node target, int distance) {
+        List<Integer> elements = new ArrayList<>();
+        populateNodesAtDistanceForTargetNode(root, target, distance, elements);
+        return elements.toString();
+    }
+
+    private int populateNodesAtDistanceForTargetNode(Node n, Node target, int distance, List<Integer> elements) {
+        if (n == null) return -1;
+        if (n == target) {
+            populateNodesAtDistanceDown(n, distance, elements);
+            return 0;
+        }
+
+        int d = populateNodesAtDistanceForTargetNode(n.left, target, distance, elements);
+        if (d != -1) {
+            if (d + 1 == distance) {
+                elements.add(n.data);
+            } else {
+                populateNodesAtDistanceDown(n.right, distance - d - 2, elements);
+            }
+            return 1 + d;
+        }
+        d = populateNodesAtDistanceForTargetNode(n.right, target, distance, elements);
+        if (d != -1) {
+            if (d + 1 == distance) {
+                elements.add(n.data);
+            } else {
+                populateNodesAtDistanceDown(n.left, distance - d - 2, elements);
+            }
+            return 1 + d;
+        }
+        return -1;
     }
 
     public static class Node {

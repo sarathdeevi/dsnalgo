@@ -8,6 +8,22 @@ import static org.junit.Assert.assertThat;
 public class ArrayPracticeTest {
 
     @Test
+    public void testRotateArray() {
+        int[] a = {1, 2, 3, 4, 5, 6};
+        ArrayPractice.rotateArrayOrderNk(a, 2);
+
+        assertThat(a, Matchers.equalTo(new int[]{3, 4, 5, 6, 1, 2}));
+    }
+
+    @Test
+    public void testRotateArrayOn() {
+        int[] a = {1, 2, 3, 4, 5, 6, 7};
+        ArrayPractice.rotateArrayOrderN(a, 2);
+
+        assertThat(a, Matchers.equalTo(new int[]{3, 4, 5, 6, 7, 1, 2}));
+    }
+
+    @Test
     public void testTrappedRainWater() {
         assertThat(ArrayPractice.getTrappedRainWater(new int[]{7, 4, 0, 9}), Matchers.equalTo(10));
         assertThat(ArrayPractice.getTrappedRainWater(new int[]{6, 9, 9}), Matchers.equalTo(0));
