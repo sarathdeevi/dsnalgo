@@ -233,4 +233,113 @@ public class BinaryTreeTest {
         assertThat(sampleTree1.getNodesWithKLeaves(4), is("[]"));
         assertThat(sampleTree1.getNodesWithKLeaves(5), is("[1]"));
     }
+
+    @Test
+    public void isBST_ifBST_thenReturnTrue() {
+        assertThat(sampleTree1.isBST(), is(false));
+
+        BinaryTree tree = new BinaryTree(4);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(5);
+        tree.root.left.left = new Node(1);
+        tree.root.left.right = new Node(3);
+        assertThat(tree.isBST(), is(true));
+
+        tree = new BinaryTree(3);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(5);
+        tree.root.left.left = new Node(1);
+        tree.root.left.right = new Node(4);
+        assertThat(tree.isBST(), is(false));
+    }
+
+    @Test
+    public void mirror_thenMirrorsTree() {
+        BinaryTree tree = new BinaryTree(4);
+        tree.root.left = new Node(2);
+        tree.root.right = new Node(5);
+        tree.root.left.left = new Node(1);
+        tree.root.left.right = new Node(3);
+
+        tree.mirror();
+
+        assertThat(tree.root.data, is(4));
+        assertThat(tree.root.right.data, is(2));
+        assertThat(tree.root.left.data, is(5));
+        assertThat(tree.root.right.right.data, is(1));
+        assertThat(tree.root.right.left.data, is(3));
+    }
+
+    @Test
+    public void isMirrorOf_givenAnotherTree_thenReturnsTrueIfMirror() {
+        BinaryTree tree1 = new BinaryTree(4);
+        tree1.root.left = new Node(2);
+        tree1.root.right = new Node(5);
+        tree1.root.left.left = new Node(1);
+        tree1.root.left.right = new Node(3);
+
+        BinaryTree tree2 = new BinaryTree(4);
+        tree2.root.right = new Node(2);
+        tree2.root.left = new Node(5);
+        tree2.root.right.right = new Node(1);
+        tree2.root.right.left = new Node(3);
+
+        assertThat(tree1.isMirrorOf(tree2), is(true));
+        tree2.root.right.right = new Node(5);
+        assertThat(tree1.isMirrorOf(tree2), is(false));
+    }
+
+    @Test
+    public void isSelfMirror_givenTree_thenReturnsTrueIfSelfMirror() {
+        BinaryTree tree1 = new BinaryTree(4);
+        tree1.root.left = new Node(2);
+        tree1.root.right = new Node(2);
+        tree1.root.left.left = new Node(1);
+        tree1.root.left.right = new Node(3);
+        tree1.root.right.right = new Node(1);
+        tree1.root.right.left = new Node(3);
+
+        assertThat(tree1.isSelfMirror(), is(true));
+        tree1.root.right.left = null;
+        assertThat(tree1.isSelfMirror(), is(false));
+    }
+
+    @Test
+    public void isIsoMorphic_givenOtherTree_thenReturnsTrueIfIsomorphic() {
+        /*
+                              1
+                         2          3
+                      4   5       7   6
+                        8       9 10
+        */
+
+        BinaryTree tree1 = new BinaryTree(1);
+        tree1.root.left = new Node(2);
+        tree1.root.right = new Node(3);
+        tree1.root.left.left = new Node(4);
+        tree1.root.left.right = new Node(5);
+        tree1.root.right.right = new Node(6);
+        tree1.root.right.left = new Node(7);
+
+        assertThat(sampleTree1.isIsomorphic(tree1), is(false));
+
+        tree1.root.left.right.left = new Node(8);
+        tree1.root.right.left.left = new Node(9);
+        tree1.root.right.left.right = new Node(10);
+
+        assertThat(sampleTree1.isIsomorphic(tree1), is(true));
+
+        tree1.root.right.left.right = new Node(9);
+        tree1.root.right.left.left = new Node(10);
+
+        assertThat(sampleTree1.isIsomorphic(tree1), is(true));
+    }
+
+    @Test
+    public void diameter_thenReturnsDiameter() {
+        assertThat(sampleTree1.getDiameter(), is(7));
+        sampleTree1.root.right.right.left.right = new Node(11);
+
+        assertThat(sampleTree1.getDiameter(), is(8));
+    }
 }

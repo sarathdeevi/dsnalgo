@@ -25,10 +25,10 @@ public class BinaryTree {
         return getHeight(root);
     }
 
-    private int getHeight(Node node) {
-        if (node == null) return 0;
-        int leftHeight = getHeight(node.left);
-        int rightHeight = getHeight(node.right);
+    private int getHeight(Node n) {
+        if (n == null) return 0;
+        int leftHeight = getHeight(n.left);
+        int rightHeight = getHeight(n.right);
 
         return Math.max(leftHeight, rightHeight) + 1;
     }
@@ -61,17 +61,17 @@ public class BinaryTree {
         return levelOrderTraversalList;
     }
 
-    private void getLevelOrderTraversal(Node node, int level, List<Integer> levelOrderTraversalList, boolean leftToRight) {
-        if (node == null) return;
+    private void getLevelOrderTraversal(Node n, int level, List<Integer> levelOrderTraversalList, boolean leftToRight) {
+        if (n == null) return;
         if (level == 1) {
-            levelOrderTraversalList.add(node.data);
+            levelOrderTraversalList.add(n.data);
         } else {
             if (leftToRight) {
-                getLevelOrderTraversal(node.left, level - 1, levelOrderTraversalList, true);
-                getLevelOrderTraversal(node.right, level - 1, levelOrderTraversalList, true);
+                getLevelOrderTraversal(n.left, level - 1, levelOrderTraversalList, true);
+                getLevelOrderTraversal(n.right, level - 1, levelOrderTraversalList, true);
             } else {
-                getLevelOrderTraversal(node.right, level - 1, levelOrderTraversalList, false);
-                getLevelOrderTraversal(node.left, level - 1, levelOrderTraversalList, false);
+                getLevelOrderTraversal(n.right, level - 1, levelOrderTraversalList, false);
+                getLevelOrderTraversal(n.left, level - 1, levelOrderTraversalList, false);
             }
         }
     }
@@ -103,14 +103,14 @@ public class BinaryTree {
         return getVerticalLine(root, verticalLine, line_num, 0);
     }
 
-    private List<Integer> getVerticalLine(Node node, List<Integer> values, int line_num, int curr) {
-        if (node != null) {
+    private List<Integer> getVerticalLine(Node n, List<Integer> values, int line_num, int curr) {
+        if (n != null) {
             if (curr == line_num) {
-                values.add(node.data);
+                values.add(n.data);
             }
 
-            getVerticalLine(node.left, values, line_num, curr - 1);
-            getVerticalLine(node.right, values, line_num, curr + 1);
+            getVerticalLine(n.left, values, line_num, curr - 1);
+            getVerticalLine(n.right, values, line_num, curr + 1);
         }
         return values;
     }
@@ -126,16 +126,16 @@ public class BinaryTree {
         return verticalOrderElements;
     }
 
-    private void findMinMax(Node node, AtomicInteger min, AtomicInteger max, int curr) {
-        if (node == null) return;
+    private void findMinMax(Node n, AtomicInteger min, AtomicInteger max, int curr) {
+        if (n == null) return;
         if (curr < min.get()) {
             min.set(curr);
         } else if (curr > max.get()) {
             max.set(curr);
         }
 
-        findMinMax(node.left, min, max, curr - 1);
-        findMinMax(node.right, min, max, curr + 1);
+        findMinMax(n.left, min, max, curr - 1);
+        findMinMax(n.right, min, max, curr + 1);
     }
 
     public List<Integer> getLeftView() {
@@ -145,16 +145,16 @@ public class BinaryTree {
         return leftViewElements;
     }
 
-    private void getLeftView(Node node, List<Integer> leftViewElements, int currLevel, AtomicInteger maxLevel) {
-        if (node == null) return;
+    private void getLeftView(Node n, List<Integer> leftViewElements, int currLevel, AtomicInteger maxLevel) {
+        if (n == null) return;
 
         if (maxLevel.get() < currLevel) {
-            leftViewElements.add(node.data);
+            leftViewElements.add(n.data);
             maxLevel.set(currLevel);
         }
 
-        getLeftView(node.left, leftViewElements, currLevel + 1, maxLevel);
-        getLeftView(node.right, leftViewElements, currLevel + 1, maxLevel);
+        getLeftView(n.left, leftViewElements, currLevel + 1, maxLevel);
+        getLeftView(n.right, leftViewElements, currLevel + 1, maxLevel);
     }
 
     public List<Integer> getRightView() {
@@ -164,16 +164,16 @@ public class BinaryTree {
         return rightViewElements;
     }
 
-    private void getRightView(Node node, List<Integer> rightViewElements, int currLevel, AtomicInteger maxLevel) {
-        if (node == null) return;
+    private void getRightView(Node n, List<Integer> rightViewElements, int currLevel, AtomicInteger maxLevel) {
+        if (n == null) return;
 
         if (maxLevel.get() < currLevel) {
-            rightViewElements.add(node.data);
+            rightViewElements.add(n.data);
             maxLevel.set(currLevel);
         }
 
-        getRightView(node.right, rightViewElements, currLevel + 1, maxLevel);
-        getRightView(node.left, rightViewElements, currLevel + 1, maxLevel);
+        getRightView(n.right, rightViewElements, currLevel + 1, maxLevel);
+        getRightView(n.left, rightViewElements, currLevel + 1, maxLevel);
     }
 
     public List<Integer> getBoundaryTraversal() {
@@ -202,37 +202,37 @@ public class BinaryTree {
         return boundaryElements;
     }
 
-    private void getLeftBoundary(Node node, List<Integer> boundaryElements, boolean includeLeaf) {
-        if (node == null) return;
+    private void getLeftBoundary(Node n, List<Integer> boundaryElements, boolean includeLeaf) {
+        if (n == null) return;
         if (includeLeaf) {
-            boundaryElements.add(node.data);
-        } else if (node.left != null || node.right != null) {
-            boundaryElements.add(node.data);
+            boundaryElements.add(n.data);
+        } else if (n.left != null || n.right != null) {
+            boundaryElements.add(n.data);
         }
-        if (node.left != null) {
-            getLeftBoundary(node.left, boundaryElements, includeLeaf);
+        if (n.left != null) {
+            getLeftBoundary(n.left, boundaryElements, includeLeaf);
         }
     }
 
-    private void getRightBoundary(Node node, List<Integer> boundaryElements, boolean includeLeaf) {
-        if (node == null) return;
+    private void getRightBoundary(Node n, List<Integer> boundaryElements, boolean includeLeaf) {
+        if (n == null) return;
         if (includeLeaf) {
-            boundaryElements.add(node.data);
-        } else if (node.left != null || node.right != null) {
-            boundaryElements.add(node.data);
+            boundaryElements.add(n.data);
+        } else if (n.left != null || n.right != null) {
+            boundaryElements.add(n.data);
         }
-        if (node.right != null) {
-            getRightBoundary(node.right, boundaryElements, includeLeaf);
+        if (n.right != null) {
+            getRightBoundary(n.right, boundaryElements, includeLeaf);
         }
     }
 
-    private void getLeaves(Node node, List<Integer> elements) {
-        if (node == null) return;
-        if (node.left == null && node.right == null) {
-            elements.add(node.data);
+    private void getLeaves(Node n, List<Integer> elements) {
+        if (n == null) return;
+        if (n.left == null && n.right == null) {
+            elements.add(n.data);
         }
-        getLeaves(node.left, elements);
-        getLeaves(node.right, elements);
+        getLeaves(n.left, elements);
+        getLeaves(n.right, elements);
     }
 
     public List<Integer> getDiagonalTraversal() {
@@ -241,15 +241,15 @@ public class BinaryTree {
         return slopeElementMap.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
-    private void getDiagonalTraversal(Node node, Map<Integer, List<Integer>> slopeElementMap, int slope) {
-        if (node == null) return;
+    private void getDiagonalTraversal(Node n, Map<Integer, List<Integer>> slopeElementMap, int slope) {
+        if (n == null) return;
         if (!slopeElementMap.containsKey(slope)) {
             slopeElementMap.put(slope, new ArrayList<>());
         }
-        slopeElementMap.get(slope).add(node.data);
+        slopeElementMap.get(slope).add(n.data);
 
-        getDiagonalTraversal(node.left, slopeElementMap, slope + 1);
-        getDiagonalTraversal(node.right, slopeElementMap, slope);
+        getDiagonalTraversal(n.left, slopeElementMap, slope + 1);
+        getDiagonalTraversal(n.right, slopeElementMap, slope);
     }
 
     public List<Integer> getPreOrderTraversal() {
@@ -258,11 +258,11 @@ public class BinaryTree {
         return preOrderElements;
     }
 
-    private void getPreOrderTraversal(Node node, List<Integer> elements) {
-        if (node == null) return;
-        elements.add(node.data);
-        getPreOrderTraversal(node.left, elements);
-        getPreOrderTraversal(node.right, elements);
+    private void getPreOrderTraversal(Node n, List<Integer> elements) {
+        if (n == null) return;
+        elements.add(n.data);
+        getPreOrderTraversal(n.left, elements);
+        getPreOrderTraversal(n.right, elements);
     }
 
     public List<Integer> getPreOrderTraversalIterative() {
@@ -271,11 +271,11 @@ public class BinaryTree {
         return preOrderElements;
     }
 
-    private void getPreOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (node == null) return;
+    private void getPreOrderTraversalIterative(Node n, List<Integer> elements) {
+        if (n == null) return;
         Stack<Node> stack = new Stack<>();
 
-        stack.push(node);
+        stack.push(n);
 
         while (!stack.empty()) {
             Node currNode = stack.pop();
@@ -296,11 +296,11 @@ public class BinaryTree {
         return inOrderTraversal;
     }
 
-    private void getInOrderTraversal(Node node, List<Integer> elements) {
-        if (node == null) return;
-        getInOrderTraversal(node.left, elements);
-        elements.add(node.data);
-        getInOrderTraversal(node.right, elements);
+    private void getInOrderTraversal(Node n, List<Integer> elements) {
+        if (n == null) return;
+        getInOrderTraversal(n.left, elements);
+        elements.add(n.data);
+        getInOrderTraversal(n.right, elements);
     }
 
     public List<Integer> getInOrderTraversalIterative() {
@@ -309,11 +309,11 @@ public class BinaryTree {
         return inOrderElements;
     }
 
-    private void getInOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (node == null) return;
+    private void getInOrderTraversalIterative(Node n, List<Integer> elements) {
+        if (n == null) return;
         Stack<Node> stack = new Stack<>();
 
-        Node curr = node;
+        Node curr = n;
 
         while (curr != null || !stack.isEmpty()) {
             while (curr != null) {
@@ -332,11 +332,11 @@ public class BinaryTree {
         return PostOrderTraversal;
     }
 
-    private void getPostOrderTraversal(Node node, List<Integer> elements) {
-        if (node == null) return;
-        getPostOrderTraversal(node.left, elements);
-        getPostOrderTraversal(node.right, elements);
-        elements.add(node.data);
+    private void getPostOrderTraversal(Node n, List<Integer> elements) {
+        if (n == null) return;
+        getPostOrderTraversal(n.left, elements);
+        getPostOrderTraversal(n.right, elements);
+        elements.add(n.data);
     }
 
     public List<Integer> getPostOrderTraversalIterative() {
@@ -345,11 +345,11 @@ public class BinaryTree {
         return postOrderElements;
     }
 
-    private void getPostOrderTraversalIterative(Node node, List<Integer> elements) {
-        if (node == null) return;
+    private void getPostOrderTraversalIterative(Node n, List<Integer> elements) {
+        if (n == null) return;
         Stack<Node> stack = new Stack<>();
 
-        Node curr = node;
+        Node curr = n;
 
         while (curr != null || !stack.isEmpty()) {
             if (curr != null) {
@@ -380,16 +380,16 @@ public class BinaryTree {
         return sb.toString();
     }
 
-    private void populateRootToLeafPaths(Node node, StringBuilder sb) {
-        if (node == null) {
+    private void populateRootToLeafPaths(Node n, StringBuilder sb) {
+        if (n == null) {
             return;
         }
-        stack.get().push(node.data);
-        populateRootToLeafPaths(node.left, sb);
-        if (node.left == null && node.right == null) {
+        stack.get().push(n.data);
+        populateRootToLeafPaths(n.left, sb);
+        if (n.left == null && n.right == null) {
             sb.append(stack.get().toString());
         }
-        populateRootToLeafPaths(node.right, sb);
+        populateRootToLeafPaths(n.right, sb);
         stack.get().pop();
     }
 
@@ -397,23 +397,23 @@ public class BinaryTree {
         this.sum.set(0);
         stack.set(new Stack<>());
         StringBuilder sb = new StringBuilder();
-        Node node = root;
-        populatePathsWithGivenSum(node, sum, sb);
+        Node n = root;
+        populatePathsWithGivenSum(n, sum, sb);
         return sb.toString();
     }
 
-    private void populatePathsWithGivenSum(Node node, Integer sum, StringBuilder sb) {
-        if (node == null) {
+    private void populatePathsWithGivenSum(Node n, Integer sum, StringBuilder sb) {
+        if (n == null) {
             return;
         }
-        int value = node.data;
+        int value = n.data;
         this.sum.set(this.sum.get() + value);
         stack.get().push(value);
         if (this.sum.get().equals(sum)) {
             sb.append(stack.get().toString());
         }
-        populatePathsWithGivenSum(node.left, sum, sb);
-        populatePathsWithGivenSum(node.right, sum, sb);
+        populatePathsWithGivenSum(n.left, sum, sb);
+        populatePathsWithGivenSum(n.right, sum, sb);
         this.sum.set(this.sum.get() - value);
         stack.get().pop();
     }
@@ -518,6 +518,79 @@ public class BinaryTree {
             elements.add(n.data);
         }
         return total;
+    }
+
+    public int getDiameter() {
+        return getDiameter(root);
+    }
+
+    private int getDiameter(Node n) {
+        if (n == null) return 0;
+        int leftHeight = getHeight(n.left);
+        int rightHeight = getHeight(n.right);
+
+        int lDiameter = getDiameter(n.left);
+        int rDiameter = getDiameter(n.right);
+
+        return Math.max(leftHeight + rightHeight + 1, Math.max(lDiameter, rDiameter));
+    }
+
+    public boolean isBST() {
+        return isBST(root, null, null);
+    }
+
+    private boolean isBST(Node n, Node left, Node right) {
+        if (n == null) return true;
+        if (left != null && n.data <= left.data) return false;
+        if (right != null && n.data >= right.data) return false;
+
+        return isBST(n.left, left, n) && isBST(n.right, n, right);
+    }
+
+    public void mirror() {
+        mirror(root);
+    }
+
+    private void mirror(Node n) {
+        if (n == null) return;
+        Node temp = n.left;
+        n.left = n.right;
+        n.right = temp;
+
+        mirror(n.left);
+        mirror(n.right);
+    }
+
+    public boolean isSelfMirror() {
+        if (root == null) return true;
+        return isMirror(root.left, root.right);
+    }
+
+    public boolean isMirrorOf(BinaryTree tree2) {
+        return isMirror(root, tree2.root);
+    }
+
+    private boolean isMirror(Node n1, Node n2) {
+        if (n1 == null && n2 == null) return true;
+        if (n1 == null || n2 == null) return false;
+
+        return n1.data == n2.data && isMirror(n1.left, n2.right) && isMirror(n1.right, n2.left);
+    }
+
+    public boolean isIsomorphic(BinaryTree tree2) {
+        return isIsomorphic(root, tree2.root);
+    }
+
+    private boolean isIsomorphic(Node n1, Node n2) {
+        if (n1 == null && n2 == null) return true;
+        if (n1 == null || n2 == null) return false;
+
+        if (n1.data != n2.data) {
+            return false;
+        }
+
+        return (isIsomorphic(n1.left, n2.left) && isIsomorphic(n1.right, n2.right)) ||
+                (isIsomorphic(n1.left, n2.right) && isIsomorphic(n1.right, n2.left));
     }
 
     public static class Node {
