@@ -342,4 +342,12 @@ public class BinaryTreeTest {
 
         assertThat(sampleTree1.getDiameter(), is(8));
     }
+
+    @Test
+    public void getDeepestNode_thenReturnsDeepestNode() {
+        assertThat(sampleTree1.getDeepestNode().data, is(8));
+
+        sampleTree1.root.right.right.left.right = new Node(11);
+        assertThat(sampleTree1.getDeepestNode().data, is(11));
+    }
 }

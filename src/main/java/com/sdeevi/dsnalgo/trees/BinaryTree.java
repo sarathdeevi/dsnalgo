@@ -593,6 +593,26 @@ public class BinaryTree {
                 (isIsomorphic(n1.left, n2.right) && isIsomorphic(n1.right, n2.left));
     }
 
+    private int maxLevel = -1;
+    private Node deepestNode = null;
+
+    public Node getDeepestNode() {
+        findDeepestNode(root, 0);
+        return deepestNode;
+    }
+
+    private void findDeepestNode(Node n, int level) {
+        if (n != null) {
+            level++;
+            findDeepestNode(n.left, level);
+            if (level > maxLevel) {
+                deepestNode = n;
+                maxLevel = level;
+            }
+            findDeepestNode(n.right, level);
+        }
+    }
+
     public static class Node {
 
         public Node left;
