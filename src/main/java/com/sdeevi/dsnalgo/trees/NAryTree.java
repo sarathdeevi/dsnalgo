@@ -10,6 +10,10 @@ public class NAryTree {
         root = new Node(data);
     }
 
+    public boolean isSelfMirror() {
+        return isMirror(root, root);
+    }
+
     public boolean isMirror(NAryTree tree) {
         return isMirror(root, tree.root);
     }

@@ -61,6 +61,17 @@ public class NAryTreeTest {
         assertThat(sampleTree.isMirror(otherTree), is(false));
 
         otherTree.root.children = null;
-        assertThat(sampleTree.isMirror(otherTree), is(false));
+        assertThat(sampleTree.isSelfMirror(), is(false));
+
+        NAryTree mirrorTree = new NAryTree(10);
+        mirrorTree.root.children.add(new Node(9));
+        mirrorTree.root.children.add(new Node(8));
+        mirrorTree.root.children.add(new Node(9));
+        mirrorTree.root.children.get(2).children.add(new Node(5));
+        mirrorTree.root.children.get(2).children.add(new Node(6));
+        mirrorTree.root.children.get(1).children.add(new Node(32));
+        mirrorTree.root.children.get(0).children.add(new Node(6));
+        mirrorTree.root.children.get(0).children.add(new Node(5));
+        assertThat(mirrorTree.isSelfMirror(), is(true));
     }
 }
