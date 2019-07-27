@@ -10,6 +10,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class BinaryTreeTest {
@@ -24,7 +26,7 @@ public class BinaryTreeTest {
                               1
                          2          3
                       4   5       6   7
-                            8        9 10
+                         8           9 10
         */
         sampleTree1 = new BinaryTree(1);
         Node node2 = new Node(2);
@@ -181,6 +183,13 @@ public class BinaryTreeTest {
     }
 
     @Test
+    public void getPreOrderMorristTraversal_thenReturnsPreOrderTraversal() {
+        List<Integer> preOrderTraversal = sampleTree1.getMorrisPreOrderTraversal();
+
+        assertThat(preOrderTraversal, is(asList(1, 2, 4, 5, 8, 3, 6, 7, 9, 10)));
+    }
+
+    @Test
     public void getInOrderTraversal_thenReturnsInOrderTraversal() {
         List<Integer> inOrderTraversal = sampleTree1.getInOrderTraversal();
 
@@ -190,6 +199,13 @@ public class BinaryTreeTest {
     @Test
     public void getInOrderTraversalIterative_thenReturnsInOrderTraversal() {
         List<Integer> inOrderTraversal = sampleTree1.getInOrderTraversalIterative();
+
+        assertThat(inOrderTraversal, is(asList(4, 2, 8, 5, 1, 6, 3, 9, 7, 10)));
+    }
+
+    @Test
+    public void getMorrisInOrderTraversal_thenReturnsInOrderTraversal() {
+        List<Integer> inOrderTraversal = sampleTree1.getMorrisInOrderTraversal();
 
         assertThat(inOrderTraversal, is(asList(4, 2, 8, 5, 1, 6, 3, 9, 7, 10)));
     }
@@ -349,5 +365,64 @@ public class BinaryTreeTest {
 
         sampleTree1.root.right.right.left.right = new Node(11);
         assertThat(sampleTree1.getDeepestNode().data, is(11));
+        assertThat(sampleTree1.findMaxLevel(), is(5));
+    }
+
+    @Test
+    public void getLowestCommonAncestor_thenReturnsLowestCommonNode() {
+        assertThat(sampleTree1.getLowestCommonAncestor(6, 10).data, is(3));
+        assertThat(sampleTree1.getLowestCommonAncestor(4, 10).data, is(1));
+        assertThat(sampleTree1.getLowestCommonAncestor(5, 8).data, is(5));
+        assertThat(sampleTree1.getLowestCommonAncestor(5, 25), is(nullValue()));
+    }
+
+    @Test
+    public void searchNode_thenReturnsNode() {
+        assertThat(sampleTree1.searchNode(6), is(notNullValue()));
+        assertThat(sampleTree1.searchNode(25), is(nullValue()));
+    }
+
+    @Test
+    public void connectNodesAtSameLevel_thenConnectsNodesAtSameLevel() {
+        /*
+                              1
+                         2          3
+                      4   5       6   7
+                         8           9 10
+        */
+        sampleTree1.connectNodesAtSameLevel();
+
+        assertThat(sampleTree1.root.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.next.data, is(3));
+        assertThat(sampleTree1.root.right.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.left.next.data, is(5));
+        assertThat(sampleTree1.root.left.left.next.next.data, is(6));
+        assertThat(sampleTree1.root.left.left.next.next.next.data, is(7));
+        assertThat(sampleTree1.root.left.left.next.next.next.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.right.left.next.data, is(9));
+        assertThat(sampleTree1.root.left.right.left.next.next.data, is(10));
+        assertThat(sampleTree1.root.left.right.left.next.next.next, is(nullValue()));
+    }
+
+    @Test
+    public void connectNodesAtSameLevelRecursive_thenConnectsNodesAtSameLevel() {
+        /*
+                              1
+                         2          3
+                      4   5       6   7
+                         8           9 10
+        */
+        sampleTree1.connectNodesAtSameLevelRecursive();
+
+        assertThat(sampleTree1.root.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.next.data, is(3));
+        assertThat(sampleTree1.root.right.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.left.next.data, is(5));
+        assertThat(sampleTree1.root.left.left.next.next.data, is(6));
+        assertThat(sampleTree1.root.left.left.next.next.next.data, is(7));
+        assertThat(sampleTree1.root.left.left.next.next.next.next, is(nullValue()));
+        assertThat(sampleTree1.root.left.right.left.next.data, is(9));
+        assertThat(sampleTree1.root.left.right.left.next.next.data, is(10));
+        assertThat(sampleTree1.root.left.right.left.next.next.next, is(nullValue()));
     }
 }

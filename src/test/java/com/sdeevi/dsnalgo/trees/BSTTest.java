@@ -51,4 +51,17 @@ public class BSTTest {
     public void preOrder_thenReturnsPreOrderTraversal() {
         assertThat(sampleBST.getPreOrder().toString(), is("[10, 3, 1, 2, 8, 20, 12, 29, 25, 29]"));
     }
+
+    @Test
+    public void kthSmallestElement_thenReturnsKthSmallestElement() {
+        // [1, 2, 3, 8, 10, 12, 20, 25, 29, 29]
+
+        assertThat(sampleBST.kthSmallestElement(2), is(2));
+        assertThat(sampleBST.kthSmallestElement(10), is(29));
+        assertThat(sampleBST.kthSmallestElement(11), is(Integer.MAX_VALUE));
+
+        assertThat(sampleBST.kthSmallestElementIterative(2), is(2));
+        assertThat(sampleBST.kthSmallestElementIterative(10), is(29));
+        assertThat(sampleBST.kthSmallestElementIterative(11), is(Integer.MAX_VALUE));
+    }
 }

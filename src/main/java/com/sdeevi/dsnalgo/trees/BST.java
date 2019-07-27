@@ -2,6 +2,8 @@ package com.sdeevi.dsnalgo.trees;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BST {
 
@@ -69,6 +71,61 @@ public class BST {
         getPreOrder(n.left, elements);
         getPreOrder(n.right, elements);
     }
+
+    public int kthSmallestElement(int k) {
+        AtomicInteger count = new AtomicInteger();
+        return kthSmallestElement(root, k, count);
+    }
+
+    private int kthSmallestElement(Node n, int k, AtomicInteger count) {
+        if (n == null) return Integer.MAX_VALUE;
+
+        int left = kthSmallestElement(n.left, k, count);
+        if (left != Integer.MAX_VALUE) return left;
+
+        if (k == count.incrementAndGet()) return n.data;
+
+        return kthSmallestElement(n.right, k, count);
+    }
+
+    public int kthSmallestElementIterative(int k) {
+        if (root == null) return Integer.MAX_VALUE;
+
+        Node curr = root;
+        Stack<Node> stack = new Stack<>();
+
+        int count = 0;
+        while (curr != null || !stack.isEmpty()) {
+            while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            curr = stack.pop();
+            count++;
+            if (count == k) {
+                return curr.data;
+            }
+            curr = curr.right;
+        }
+        return Integer.MAX_VALUE;
+    }
+
+//    public BST merge(BST tree2) {
+//
+//    }
+
+//    private Node merge(Node n1, Node n2) {
+//        Node n;
+//        Node curr1 = n1, curr2 = n2;
+//        if (n1.data < n2.data) {
+//            n = n1;
+//            curr1 = n1.left;
+//        } else {
+//            n = n2;
+//            curr2 = curr2.left;
+//        }
+//    }
 
     public static class Node {
         public int data;

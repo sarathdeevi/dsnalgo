@@ -357,11 +357,7 @@ public class BinaryTree {
                 curr = curr.left;
             } else {
                 Node temp = stack.peek().right;
-
                 if (temp == null) {
-                    temp = stack.pop();
-                    elements.add(temp.data);
-
                     while (!stack.isEmpty() && temp == stack.peek().right) {
                         temp = stack.pop();
                         elements.add(temp.data);
@@ -380,18 +376,7 @@ public class BinaryTree {
         return sb.toString();
     }
 
-    private void populateRootToLeafPaths(Node n, StringBuilder sb) {
-        if (n == null) {
-            return;
-        }
-        stack.get().push(n.data);
-        populateRootToLeafPaths(n.left, sb);
-        if (n.left == null && n.right == null) {
-            sb.append(stack.get().toString());
-        }
-        populateRootToLeafPaths(n.right, sb);
-        stack.get().pop();
-    }
+    private ThreadLocal<Integer> maxLevel = new ThreadLocal<>();
 
     public String printPathsWithGivenSum(int sum) {
         this.sum.set(0);
@@ -593,24 +578,205 @@ public class BinaryTree {
                 (isIsomorphic(n1.left, n2.right) && isIsomorphic(n1.right, n2.left));
     }
 
-    private int maxLevel = -1;
-    private Node deepestNode = null;
+    private ThreadLocal<Node> deepestNode = new ThreadLocal<>();
+    private boolean k1Found;
+    private boolean k2Found;
+
+    private void populateRootToLeafPaths(Node n, StringBuilder sb) {
+        if (n == null) {
+            return;
+        }
+        stack.get().push(n.data);
+        if (n.left == null && n.right == null) {
+            sb.append(stack.get().toString());
+        }
+        populateRootToLeafPaths(n.left, sb);
+        populateRootToLeafPaths(n.right, sb);
+        stack.get().pop();
+    }
 
     public Node getDeepestNode() {
+        maxLevel.set(-1);
         findDeepestNode(root, 0);
-        return deepestNode;
+        return deepestNode.get();
+    }
+
+    public int findMaxLevel() {
+        maxLevel.set(-1);
+        findDeepestNode(root, 0);
+        return maxLevel.get();
     }
 
     private void findDeepestNode(Node n, int level) {
         if (n != null) {
             level++;
-            findDeepestNode(n.left, level);
-            if (level > maxLevel) {
-                deepestNode = n;
-                maxLevel = level;
+            if (level > maxLevel.get()) {
+                deepestNode.set(n);
+                maxLevel.set(level);
             }
+            findDeepestNode(n.left, level);
             findDeepestNode(n.right, level);
         }
+    }
+
+    public Node getLowestCommonAncestor(int k1, int k2) {
+        k1Found = k2Found = false;
+        Node node = getLowestCommonAncestor(root, k1, k2);
+        return k1Found && k2Found ? node : null;
+    }
+
+    private Node getLowestCommonAncestor(Node n, int k1, int k2) {
+        if (n == null) return null;
+
+        Node temp = null;
+        if (n.data == k1) {
+            k1Found = true;
+            temp = n;
+        }
+        if (n.data == k2) {
+            k2Found = true;
+            temp = n;
+        }
+
+        Node nodeFoundFromLeft = getLowestCommonAncestor(n.left, k1, k2);
+        Node nodeFoundFromRight = getLowestCommonAncestor(n.right, k1, k2);
+
+        if (temp != null) return temp;
+        /*
+          This means one element is found in left subtree and one element is found in right sub tree
+         */
+        if (nodeFoundFromLeft != null && nodeFoundFromRight != null) return n;
+        return nodeFoundFromLeft == null ? nodeFoundFromRight : nodeFoundFromLeft;
+    }
+
+    public Node searchNode(int k) {
+        return searchNode(root, k);
+    }
+
+    private Node searchNode(Node n, int k) {
+        if (n == null) return null;
+        if (n.data == k) return n;
+
+        Node res = searchNode(n.left, k);
+        if (res == null) {
+            res = searchNode(n.right, k);
+        }
+        return res;
+    }
+
+    public List<Integer> getMorrisInOrderTraversal() {
+        Node curr = root;
+        List<Integer> elements = new ArrayList<>();
+
+        while (curr != null) {
+            if (curr.left == null) {
+                elements.add(curr.data);
+                curr = curr.right;
+            } else {
+                Node predecessor = curr.left;
+                while (predecessor.right != curr && predecessor.right != null) {
+                    predecessor = predecessor.right;
+                }
+                if (predecessor.right == null) {
+                    predecessor.right = curr;
+                    curr = curr.left;
+                } else {
+                    predecessor.right = null;
+                    elements.add(curr.data);
+                    curr = curr.right;
+                }
+            }
+        }
+        return elements;
+    }
+
+    public List<Integer> getMorrisPreOrderTraversal() {
+        Node curr = root;
+        List<Integer> elements = new ArrayList<>();
+
+        while (curr != null) {
+            if (curr.left == null) {
+                elements.add(curr.data);
+                curr = curr.right;
+            } else {
+                Node predecessor = curr.left;
+                while (predecessor.right != curr && predecessor.right != null) {
+                    predecessor = predecessor.right;
+                }
+                if (predecessor.right == null) {
+                    predecessor.right = curr;
+                    elements.add(curr.data);
+                    curr = curr.left;
+                } else {
+                    predecessor.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+        return elements;
+    }
+
+    public void connectNodesAtSameLevel() {
+        if (root == null) {
+            return;
+        }
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+
+        Node prev = null;
+
+        while (!q.isEmpty()) {
+            Node temp = q.remove();
+
+            if (temp == null) {
+                if (q.peek() != null) {
+                    q.add(null);
+                    prev = null;
+                }
+            } else {
+                if (prev != null) {
+                    prev.next = temp;
+                }
+                prev = temp;
+
+                if (temp.left != null) q.add(temp.left);
+                if (temp.right != null) q.add(temp.right);
+            }
+        }
+
+    }
+
+    public void connectNodesAtSameLevelRecursive() {
+        connectNodesAtSameLevelRecursive(root);
+    }
+
+    private void connectNodesAtSameLevelRecursive(Node n) {
+        if (n == null || isLeaf(n)) return;
+        if (n.left != null && n.right != null) {
+            n.left.next = n.right;
+            n.right.next = getNextRightChildNode(n);
+        } else {
+            Node child = n.left != null ? n.left : n.right;
+            if (child != null) {
+                child.next = getNextRightChildNode(n);
+            }
+        }
+
+        connectNodesAtSameLevelRecursive(n.right);
+        connectNodesAtSameLevelRecursive(n.left);
+    }
+
+    private Node getNextRightChildNode(Node n) {
+        Node next = n.next;
+        while (next != null && isLeaf(next)) {
+            next = next.next;
+        }
+        return next == null ? null : next.left != null ? next.left : next.right;
+    }
+
+    private boolean isLeaf(Node n) {
+        return n.left == null && n.right == null;
     }
 
     public static class Node {
@@ -619,8 +785,16 @@ public class BinaryTree {
         public Node right;
         public int data;
 
+        // Used only for one example where we need to connect nodes at same level.
+        public Node next;
+
         public Node(int data) {
             this.data = data;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(data);
         }
     }
 }
