@@ -26,6 +26,8 @@ public class BinaryTree {
     private int node1Level;
     private int node2Level;
     private int maxLevel;
+    private int maxLeftViewLevel;
+    private int maxRightViewLevel;
 
 
     public Node root;
@@ -35,6 +37,10 @@ public class BinaryTree {
 
     public BinaryTree(int root) {
         this.root = new Node(root);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public int getHeight() {
@@ -134,40 +140,40 @@ public class BinaryTree {
 
     public List<Integer> getLeftView() {
         List<Integer> leftViewElements = new ArrayList<>();
-        AtomicInteger maxLevel = new AtomicInteger();
-        getLeftView(root, leftViewElements, 1, maxLevel);
+        maxLeftViewLevel = 0;
+        getLeftView(root, leftViewElements, 1);
         return leftViewElements;
     }
 
-    private void getLeftView(Node n, List<Integer> leftViewElements, int currLevel, AtomicInteger maxLevel) {
+    private void getLeftView(Node n, List<Integer> leftViewElements, int currLevel) {
         if (n == null) return;
 
-        if (maxLevel.get() < currLevel) {
+        if (maxLeftViewLevel < currLevel) {
             leftViewElements.add(n.data);
-            maxLevel.set(currLevel);
+            maxLeftViewLevel = currLevel;
         }
 
-        getLeftView(n.left, leftViewElements, currLevel + 1, maxLevel);
-        getLeftView(n.right, leftViewElements, currLevel + 1, maxLevel);
+        getLeftView(n.left, leftViewElements, currLevel + 1);
+        getLeftView(n.right, leftViewElements, currLevel + 1);
     }
 
     public List<Integer> getRightView() {
         List<Integer> rightViewElements = new ArrayList<>();
-        AtomicInteger maxLevel = new AtomicInteger();
-        getRightView(root, rightViewElements, 1, maxLevel);
+        maxRightViewLevel = 0;
+        getRightView(root, rightViewElements, 1);
         return rightViewElements;
     }
 
-    private void getRightView(Node n, List<Integer> rightViewElements, int currLevel, AtomicInteger maxLevel) {
+    private void getRightView(Node n, List<Integer> rightViewElements, int currLevel) {
         if (n == null) return;
 
-        if (maxLevel.get() < currLevel) {
+        if (maxRightViewLevel < currLevel) {
             rightViewElements.add(n.data);
-            maxLevel.set(currLevel);
+            maxRightViewLevel = currLevel;
         }
 
-        getRightView(n.right, rightViewElements, currLevel + 1, maxLevel);
-        getRightView(n.left, rightViewElements, currLevel + 1, maxLevel);
+        getRightView(n.right, rightViewElements, currLevel + 1);
+        getRightView(n.left, rightViewElements, currLevel + 1);
     }
 
     public List<Integer> getBoundaryTraversal() {
@@ -200,7 +206,7 @@ public class BinaryTree {
         if (n == null) return;
         if (includeLeaf) {
             boundaryElements.add(n.data);
-        } else if (n.left != null || n.right != null) {
+        } else if (!isLeaf(n)) {
             boundaryElements.add(n.data);
         }
         if (n.left != null) {
@@ -212,7 +218,7 @@ public class BinaryTree {
         if (n == null) return;
         if (includeLeaf) {
             boundaryElements.add(n.data);
-        } else if (n.left != null || n.right != null) {
+        } else if (!isLeaf(n)) {
             boundaryElements.add(n.data);
         }
         if (n.right != null) {
@@ -361,10 +367,6 @@ public class BinaryTree {
                 }
             }
         }
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     private void populatePathsWithGivenSum(Node n, Integer sum, StringBuilder sb) {
@@ -853,8 +855,7 @@ public class BinaryTree {
 
     public boolean isCousinSingleRecursion(Node n1, Node n2) {
         node1Level = node2Level = -1;
-        isSibling = false;
-        isCousin = false;
+        isSibling = isCousin = false;
         isCousinSingleRecursion(root, n1, n2, 0);
         return isCousin;
     }

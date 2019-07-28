@@ -58,10 +58,38 @@ public class BSTTest {
 
         assertThat(sampleBST.kthSmallestElement(2), is(2));
         assertThat(sampleBST.kthSmallestElement(10), is(29));
-        assertThat(sampleBST.kthSmallestElement(11), is(Integer.MAX_VALUE));
+        assertThat(sampleBST.kthSmallestElement(12), is(Integer.MAX_VALUE));
 
         assertThat(sampleBST.kthSmallestElementIterative(2), is(2));
         assertThat(sampleBST.kthSmallestElementIterative(10), is(29));
         assertThat(sampleBST.kthSmallestElementIterative(11), is(Integer.MAX_VALUE));
+    }
+
+    @Test
+    public void kthLargestElement_thenReturnsKthSmallestElement() {
+        // [1, 2, 3, 8, 10, 12, 20, 25, 29, 29]
+
+        assertThat(sampleBST.kthLargestElement(2), is(29));
+        assertThat(sampleBST.kthLargestElement(4), is(20));
+        assertThat(sampleBST.kthLargestElement(5), is(12));
+        assertThat(sampleBST.kthLargestElement(10), is(1));
+        assertThat(sampleBST.kthLargestElement(12), is(Integer.MAX_VALUE));
+    }
+
+    @Test
+    public void lowestCommonAncestor_thenReturnsLowestCommonAncestor() {
+        /*
+                          10
+                   3             20
+               1      8       12     29
+                 2                 25  29
+         */
+        assertThat(sampleBST.lowestCommonAncestor(2, 12), is(10));
+        assertThat(sampleBST.lowestCommonAncestor(1, 2), is(1));
+        assertThat(sampleBST.lowestCommonAncestor(8, 2), is(3));
+        assertThat(sampleBST.lowestCommonAncestor(8, 25), is(10));
+        assertThat(sampleBST.lowestCommonAncestor(12, 29), is(20));
+        assertThat(sampleBST.lowestCommonAncestor(12, 43), is(2147483647));
+        assertThat(sampleBST.lowestCommonAncestor(7, 8), is(2147483647));
     }
 }

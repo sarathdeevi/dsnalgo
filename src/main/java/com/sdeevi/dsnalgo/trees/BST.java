@@ -3,9 +3,16 @@ package com.sdeevi.dsnalgo.trees;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class BST {
+
+    /*
+    Auxiliary variables for some examples. Not safe for multi-threaded scenarios
+     */
+    private int kthSmallestElementCount;
+    private Node kthSmallestNode;
+    private int kthLargestElementCount;
+    private Node kthLargestNode;
 
     private Node root;
 
@@ -73,19 +80,23 @@ public class BST {
     }
 
     public int kthSmallestElement(int k) {
-        AtomicInteger count = new AtomicInteger();
-        return kthSmallestElement(root, k, count);
+        kthSmallestNode = null;
+        kthSmallestElementCount = k;
+        kthSmallestElement(root);
+        return kthSmallestNode != null ? kthSmallestNode.data : Integer.MAX_VALUE;
     }
 
-    private int kthSmallestElement(Node n, int k, AtomicInteger count) {
-        if (n == null) return Integer.MAX_VALUE;
+    private void kthSmallestElement(Node n) {
+        if (n == null) return;
 
-        int left = kthSmallestElement(n.left, k, count);
-        if (left != Integer.MAX_VALUE) return left;
+        kthSmallestElement(n.left);
 
-        if (k == count.incrementAndGet()) return n.data;
+        kthSmallestElementCount--;
+        if (kthSmallestElementCount == 0) {
+            kthSmallestNode = n;
+        }
 
-        return kthSmallestElement(n.right, k, count);
+        kthSmallestElement(n.right);
     }
 
     public int kthSmallestElementIterative(int k) {
@@ -111,6 +122,27 @@ public class BST {
         return Integer.MAX_VALUE;
     }
 
+    public int kthLargestElement(int k) {
+        kthLargestNode = null;
+        kthLargestElementCount = k;
+        kthLargestElement(root);
+        return kthLargestNode != null ? kthLargestNode.data : Integer.MAX_VALUE;
+    }
+
+    private void kthLargestElement(Node n) {
+        if (n == null) return;
+
+        kthLargestElement(n.right);
+
+        kthLargestElementCount--;
+        if (kthLargestElementCount == 0) {
+            kthLargestNode = n;
+        }
+
+        kthLargestElement(n.left);
+    }
+
+
 //    public BST merge(BST tree2) {
 //
 //    }
@@ -126,6 +158,36 @@ public class BST {
 //            curr2 = curr2.left;
 //        }
 //    }
+
+    public int lowestCommonAncestor(int k1, int k2) {
+        if (root == null) return Integer.MAX_VALUE;
+
+        Node curr = root;
+        while (curr != null) {
+            if (k1 < curr.data && k2 < curr.data) {
+                curr = curr.left;
+            } else if (k1 > curr.data && k2 > curr.data) {
+                curr = curr.right;
+            } else {
+                return search(curr, k1) != null && search(curr, k2) != null ? curr.data : Integer.MAX_VALUE;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private Node search(Node n, int val) {
+        Node curr = n;
+        while (curr != null) {
+            if (val < curr.data) {
+                curr = curr.left;
+            } else if (val > curr.data) {
+                curr = curr.right;
+            } else {
+                return curr;
+            }
+        }
+        return null;
+    }
 
     public static class Node {
         public int data;
