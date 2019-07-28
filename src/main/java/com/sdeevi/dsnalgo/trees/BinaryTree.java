@@ -13,9 +13,25 @@ import java.util.stream.Collectors;
 
 
 public class BinaryTree {
-    private final ThreadLocal<Integer> sum = new ThreadLocal<>();
-    private final ThreadLocal<Stack<Integer>> stack = new ThreadLocal<>();
+    /*
+        Auxiliary variables to solve problems
+        Use thread local variants for cross cutting concerns. For readability thread locals are avoided.
+     */
+    private int sum;
+    private Stack<Integer> stack;
+    private boolean isSibling, isCousin;
+    private Node deepestNode;
+    private boolean k1Found;
+    private boolean k2Found;
+    private int node1Level;
+    private int node2Level;
+    private int maxLevel;
+
+
     public Node root;
+
+    private BinaryTree() {
+    }
 
     public BinaryTree(int root) {
         this.root = new Node(root);
@@ -74,28 +90,6 @@ public class BinaryTree {
                 getLevelOrderTraversal(n.left, level - 1, levelOrderTraversalList, false);
             }
         }
-    }
-
-    public List<Integer> getLevelOrderTraversalUsingQueue() {
-        if (root == null) {
-            return new ArrayList<>();
-        }
-        List<Integer> elements = new ArrayList<>();
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(root);
-
-        while (!queue.isEmpty()) {
-            Node temp = queue.poll();
-            elements.add(temp.data);
-
-            if (temp.left != null) {
-                queue.add(temp.left);
-            }
-            if (temp.right != null) {
-                queue.add(temp.right);
-            }
-        }
-        return elements;
     }
 
     public List<Integer> getVerticalLine(int line_num) {
@@ -369,22 +363,8 @@ public class BinaryTree {
         }
     }
 
-    public String printRootToLeafPaths() {
-        stack.set(new Stack<>());
-        StringBuilder sb = new StringBuilder();
-        populateRootToLeafPaths(root, sb);
-        return sb.toString();
-    }
-
-    private ThreadLocal<Integer> maxLevel = new ThreadLocal<>();
-
-    public String printPathsWithGivenSum(int sum) {
-        this.sum.set(0);
-        stack.set(new Stack<>());
-        StringBuilder sb = new StringBuilder();
-        Node n = root;
-        populatePathsWithGivenSum(n, sum, sb);
-        return sb.toString();
+    public static Builder builder() {
+        return new Builder();
     }
 
     private void populatePathsWithGivenSum(Node n, Integer sum, StringBuilder sb) {
@@ -392,15 +372,15 @@ public class BinaryTree {
             return;
         }
         int value = n.data;
-        this.sum.set(this.sum.get() + value);
-        stack.get().push(value);
-        if (this.sum.get().equals(sum)) {
-            sb.append(stack.get().toString());
+        this.sum += value;
+        stack.push(value);
+        if (this.sum == sum) {
+            sb.append(stack.toString());
         }
         populatePathsWithGivenSum(n.left, sum, sb);
         populatePathsWithGivenSum(n.right, sum, sb);
-        this.sum.set(this.sum.get() - value);
-        stack.get().pop();
+        this.sum -= value;
+        stack.pop();
     }
 
     public String printNodesAtDistanceIterative(int distance) {
@@ -578,41 +558,44 @@ public class BinaryTree {
                 (isIsomorphic(n1.left, n2.right) && isIsomorphic(n1.right, n2.left));
     }
 
-    private ThreadLocal<Node> deepestNode = new ThreadLocal<>();
-    private boolean k1Found;
-    private boolean k2Found;
-
     private void populateRootToLeafPaths(Node n, StringBuilder sb) {
         if (n == null) {
             return;
         }
-        stack.get().push(n.data);
+        stack.push(n.data);
         if (n.left == null && n.right == null) {
-            sb.append(stack.get().toString());
+            sb.append(stack.toString());
         }
         populateRootToLeafPaths(n.left, sb);
         populateRootToLeafPaths(n.right, sb);
-        stack.get().pop();
+        stack.pop();
+    }
+
+    public String printRootToLeafPaths() {
+        stack = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        populateRootToLeafPaths(root, sb);
+        return sb.toString();
     }
 
     public Node getDeepestNode() {
-        maxLevel.set(-1);
+        maxLevel = -1;
         findDeepestNode(root, 0);
-        return deepestNode.get();
+        return deepestNode;
     }
 
     public int findMaxLevel() {
-        maxLevel.set(-1);
+        maxLevel = -1;
         findDeepestNode(root, 0);
-        return maxLevel.get();
+        return maxLevel;
     }
 
     private void findDeepestNode(Node n, int level) {
         if (n != null) {
             level++;
-            if (level > maxLevel.get()) {
-                deepestNode.set(n);
-                maxLevel.set(level);
+            if (level > maxLevel) {
+                deepestNode = n;
+                maxLevel = level;
             }
             findDeepestNode(n.left, level);
             findDeepestNode(n.right, level);
@@ -777,6 +760,240 @@ public class BinaryTree {
 
     private boolean isLeaf(Node n) {
         return n.left == null && n.right == null;
+    }
+
+    public String printPathsWithGivenSum(int sum) {
+        this.sum = 0;
+        stack = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        Node n = root;
+        populatePathsWithGivenSum(n, sum, sb);
+        return sb.toString();
+    }
+
+    public List<Integer> getLevelOrderTraversalIterative() {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        List<Integer> elements = new ArrayList<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Node temp = queue.poll();
+            elements.add(temp.data);
+
+            if (temp.left != null) {
+                queue.add(temp.left);
+            }
+            if (temp.right != null) {
+                queue.add(temp.right);
+            }
+        }
+        return elements;
+    }
+
+    public List<Integer> getAllNodesThatDoNotHaveASibling() {
+        List<Integer> elements = new ArrayList<>();
+        getAllNodesThatDoNotHaveASibling(root, elements);
+        return elements;
+    }
+
+    private void getAllNodesThatDoNotHaveASibling(Node n, List<Integer> elements) {
+        if (n == null || isLeaf(n)) return;
+        if (n.left == null) {
+            elements.add(n.right.data);
+        }
+        if (n.right == null) {
+            elements.add(n.left.data);
+        }
+
+        getAllNodesThatDoNotHaveASibling(n.left, elements);
+        getAllNodesThatDoNotHaveASibling(n.right, elements);
+    }
+
+    public List<Integer> getAllCousinsIterative(Node n) {
+        if (root == null) return new ArrayList<>();
+        List<Integer> elements = new ArrayList<>();
+
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+
+        int currLevel = 0, level = -1;
+        while (!q.isEmpty()) {
+            Node temp = q.remove();
+            if (temp == null) {
+                if (q.peek() != null) {
+                    q.add(null);
+                }
+                currLevel++;
+            } else {
+                if (temp.left != n && temp.right != n) {
+                    if (temp.left != null) {
+                        q.add(temp.left);
+                    }
+                    if (temp.right != null) {
+                        q.add(temp.right);
+                    }
+                }
+                if (temp.left == n || temp.right == n) {
+                    level = currLevel + 1;
+                }
+                if (currLevel == level) {
+                    elements.add(temp.data);
+                }
+            }
+            if (level != -1 && currLevel > level) {
+                break;
+            }
+        }
+        return elements;
+    }
+
+    public boolean isCousinSingleRecursion(Node n1, Node n2) {
+        node1Level = node2Level = -1;
+        isSibling = false;
+        isCousin = false;
+        isCousinSingleRecursion(root, n1, n2, 0);
+        return isCousin;
+    }
+
+    private void isCousinSingleRecursion(Node n, Node n1, Node n2, int level) {
+        if (n == null) return;
+        if (n1 == n2) return;
+        if ((n.left == n1 && n.right == n2) || (n.left == n2 && n.right == n1)) {
+            return;
+        }
+        if (n == n1) {
+            node1Level = level;
+            return;
+        }
+        if (n == n2) {
+            node2Level = level;
+            return;
+        }
+
+        isCousinSingleRecursion(n.left, n1, n2, level + 1);
+        isCousinSingleRecursion(n.right, n1, n2, level + 1);
+
+        if (node1Level != -1 && node2Level != -1 && node1Level == node2Level && !isSibling) {
+            isCousin = true;
+        }
+    }
+
+    public boolean isCousin(Node n1, Node n2) {
+        boolean isSibling = isSibling(root, n1, n2);
+        int levelN1 = getLevel(root, n1, 0);
+        int levelN2 = getLevel(root, n2, 0);
+
+        return !isSibling && levelN1 == levelN2;
+    }
+
+    private int getLevel(Node n, Node n1, int level) {
+        if (n == null) return -1;
+        if (n1 == null) return -1;
+
+        if (n == n1) {
+            return level;
+        }
+        int l = getLevel(n.left, n1, level + 1);
+        if (l != -1) {
+            return l;
+        }
+        return getLevel(n.right, n1, level + 1);
+    }
+
+    private boolean isSibling(Node n, Node n1, Node n2) {
+        if (n == null) return false;
+        return (n.left == n1 && n.right == n2) || (n.left == n2 && n.right == n1)
+                || isSibling(n.left, n1, n2) || isSibling(n.right, n1, n2);
+    }
+
+    public static class Builder {
+
+        private Builder() {
+        }
+
+        public BinaryTree fromInOrderAndPostOrder(int[] inOrder, int[] postOrder) {
+            if (inOrder.length != postOrder.length) return null;
+            BinaryTree binaryTree = new BinaryTree();
+            binaryTree.root = fromInOrderAndPostOrder(inOrder, postOrder, 0, inOrder.length - 1, new AtomicInteger(inOrder.length - 1));
+            return binaryTree;
+        }
+
+        private Node fromInOrderAndPostOrder(int[] inOrder, int[] postOrder, int iStart, int iEnd,
+                                             AtomicInteger pIndex) {
+            if (iStart > iEnd) return null;
+            int rootElement = postOrder[pIndex.getAndDecrement()];
+            Node node = new Node(rootElement);
+            if (iStart == iEnd) return node;
+
+            int i = indexOf(inOrder, rootElement, iStart, iEnd);
+
+            node.right = fromInOrderAndPostOrder(inOrder, postOrder, i + 1, iEnd, pIndex);
+            node.left = fromInOrderAndPostOrder(inOrder, postOrder, iStart, i - 1, pIndex);
+
+            return node;
+        }
+
+        public BinaryTree fromInOrderAndPreOrder(int[] inOrder, int[] preOrder) {
+            if (inOrder.length != preOrder.length) return null;
+            BinaryTree binaryTree = new BinaryTree();
+            binaryTree.root = fromInOrderAndPreOrder(inOrder, preOrder, 0, inOrder.length - 1, new AtomicInteger());
+            return binaryTree;
+        }
+
+        private Node fromInOrderAndPreOrder(int[] inOrder, int[] preOrder, int iStart, int iEnd,
+                                            AtomicInteger pIndex) {
+            if (iStart > iEnd) {
+                return null;
+            }
+            int rootElement = preOrder[pIndex.getAndIncrement()];
+            Node node = new Node(rootElement);
+            if (iStart == iEnd) return node;
+
+            int i = indexOf(inOrder, rootElement, iStart, iEnd);
+
+            node.left = fromInOrderAndPreOrder(inOrder, preOrder, iStart, i - 1, pIndex);
+            node.right = fromInOrderAndPreOrder(inOrder, preOrder, i + 1, iEnd, pIndex);
+
+            return node;
+        }
+
+        public BinaryTree fromInOrderAndLevelOrder(int[] inOrder, int[] levelOrder) {
+            if (inOrder.length != levelOrder.length) return null;
+            BinaryTree binaryTree = new BinaryTree();
+            binaryTree.root = fromInOrderAndPreOrder(inOrder, levelOrder, 0, inOrder.length - 1, new AtomicInteger());
+            return binaryTree;
+        }
+
+        //TODO: Fix this
+        private Node fromInOrderAndLevelOrder(int[] inOrder, int[] levelOrder, int iStart, int iEnd,
+                                              AtomicInteger pIndex) {
+            if (iStart > iEnd) {
+                return null;
+            }
+            int rootElement = levelOrder[pIndex.getAndIncrement()];
+            Node node = new Node(rootElement);
+            if (iStart == iEnd) return node;
+
+            int i = indexOf(inOrder, rootElement, iStart, iEnd);
+
+            node.left = fromInOrderAndPreOrder(inOrder, levelOrder, iStart, i - 1, pIndex);
+            node.right = fromInOrderAndPreOrder(inOrder, levelOrder, i + 1, iEnd, pIndex);
+
+            return node;
+        }
+
+        private int indexOf(int[] inOrder, int ele, int start, int end) {
+            for (int i = start; i <= end; i++) {
+                if (inOrder[i] == ele) {
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 
     public static class Node {

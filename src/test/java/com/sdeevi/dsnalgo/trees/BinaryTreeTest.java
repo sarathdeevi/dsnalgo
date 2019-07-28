@@ -8,6 +8,7 @@ import java.util.List;
 import static com.sdeevi.dsnalgo.trees.BinaryTree.Node;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -103,8 +104,8 @@ public class BinaryTreeTest {
     }
 
     @Test
-    public void getLevelOrderTraversalUsingQueue_thenReturnsTraversal() {
-        List<Integer> elements = sampleTree1.getLevelOrderTraversalUsingQueue();
+    public void getLevelOrderTraversalIterative_thenReturnsTraversal() {
+        List<Integer> elements = sampleTree1.getLevelOrderTraversalIterative();
 
         assertThat(elements, is(asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)));
     }
@@ -248,6 +249,21 @@ public class BinaryTreeTest {
         assertThat(sampleTree1.getNodesWithKLeaves(3), is("[3]"));
         assertThat(sampleTree1.getNodesWithKLeaves(4), is("[]"));
         assertThat(sampleTree1.getNodesWithKLeaves(5), is("[1]"));
+    }
+
+    @Test
+    public void getAllNodesThatDoNotHaveASibling_thenGetsAllNodesWithoutSiblings() {
+        assertThat(sampleTree1.getAllNodesThatDoNotHaveASibling().toString(), is("[8]"));
+
+        sampleTree1.root.right.left.left = new Node(23);
+        assertThat(sampleTree1.getAllNodesThatDoNotHaveASibling().toString(), is("[8, 23]"));
+
+        sampleTree1.root.right.left.left.right = new Node(31);
+        assertThat(sampleTree1.getAllNodesThatDoNotHaveASibling().toString(), is("[8, 23, 31]"));
+
+        sampleTree1.root.right.left.left.left = new Node(27);
+        sampleTree1.root.right.left.left.left.right = new Node(28);
+        assertThat(sampleTree1.getAllNodesThatDoNotHaveASibling().toString(), is("[8, 23, 28]"));
     }
 
     @Test
@@ -424,5 +440,83 @@ public class BinaryTreeTest {
         assertThat(sampleTree1.root.left.right.left.next.data, is(9));
         assertThat(sampleTree1.root.left.right.left.next.next.data, is(10));
         assertThat(sampleTree1.root.left.right.left.next.next.next, is(nullValue()));
+    }
+
+    @Test
+    public void constructTreeFromInOrderAndPostOrder() {
+        BinaryTree binaryTree = BinaryTree.builder().fromInOrderAndPostOrder(new int[]{4, 2, 8, 5, 1, 6, 3, 9, 7, 10},
+                new int[]{4, 8, 5, 2, 6, 9, 10, 7, 3, 1});
+
+        Node root = binaryTree.root;
+        assertThat(root.data, is(1));
+        assertThat(root.left.data, is(2));
+        assertThat(root.right.data, is(3));
+        assertThat(root.left.left.data, is(4));
+        assertThat(root.left.right.data, is(5));
+        assertThat(root.left.right.left.data, is(8));
+        assertThat(root.right.left.data, is(6));
+        assertThat(root.right.right.data, is(7));
+        assertThat(root.right.right.left.data, is(9));
+        assertThat(root.right.right.right.data, is(10));
+    }
+
+    @Test
+    public void constructTreeFromInOrderAndPreOrder() {
+        BinaryTree binaryTree = BinaryTree.builder().fromInOrderAndPreOrder(new int[]{4, 2, 8, 5, 1, 6, 3, 9, 7, 10},
+                new int[]{1, 2, 4, 5, 8, 3, 6, 7, 9, 10});
+
+        Node root = binaryTree.root;
+        assertThat(root.data, is(1));
+        assertThat(root.left.data, is(2));
+        assertThat(root.right.data, is(3));
+        assertThat(root.left.left.data, is(4));
+        assertThat(root.left.right.data, is(5));
+        assertThat(root.left.right.left.data, is(8));
+        assertThat(root.right.left.data, is(6));
+        assertThat(root.right.right.data, is(7));
+        assertThat(root.right.right.left.data, is(9));
+        assertThat(root.right.right.right.data, is(10));
+    }
+
+    @Test
+    public void constructTreeFromInOrderAndLevelOrder() {
+        BinaryTree binaryTree = BinaryTree.builder().fromInOrderAndLevelOrder(new int[]{4, 2, 8, 5, 1, 6, 3, 9, 7, 10},
+                new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+
+        Node root = binaryTree.root;
+        assertThat(root.data, is(1));
+        assertThat(root.left.data, is(2));
+        assertThat(root.right.data, is(3));
+        assertThat(root.left.left.data, is(4));
+        assertThat(root.left.right.data, is(5));
+        assertThat(root.left.right.left.data, is(8));
+        assertThat(root.right.left.data, is(6));
+        assertThat(root.right.right.data, is(7));
+        assertThat(root.right.right.left.data, is(9));
+        assertThat(root.right.right.right.data, is(10));
+    }
+
+    @Test
+    public void getAllCousinsForIterative_thenReturnsCousins() {
+        assertThat(sampleTree1.getAllCousinsIterative(sampleTree1.root.left.right), is(asList(6, 7)));
+        assertThat(sampleTree1.getAllCousinsIterative(sampleTree1.root.right.right.right), is(singletonList(8)));
+        assertThat(sampleTree1.getAllCousinsIterative(sampleTree1.root), is(empty()));
+
+        sampleTree1.root.right.left.left = new Node(123);
+        assertThat(sampleTree1.getAllCousinsIterative(sampleTree1.root.right.left.left), is(asList(8, 9, 10)));
+    }
+
+    @Test
+    public void isCousin_thenReturnsTrueIfCousin() {
+        assertThat(sampleTree1.isCousin(sampleTree1.root.left.right, sampleTree1.root.right.left), is(true));
+        assertThat(sampleTree1.isCousin(sampleTree1.root.left.right, sampleTree1.root.left.left), is(false));
+        assertThat(sampleTree1.isCousin(sampleTree1.root.left.right, sampleTree1.root.right), is(false));
+    }
+
+    @Test
+    public void isCousinSingleRecursiona_thenReturnsTrueIfCousin() {
+        assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.right.left), is(true));
+        assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.left.left), is(false));
+        assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.right), is(false));
     }
 }
