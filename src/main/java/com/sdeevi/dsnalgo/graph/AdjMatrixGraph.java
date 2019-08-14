@@ -1,31 +1,39 @@
 package com.sdeevi.dsnalgo.graph;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.sdeevi.dsnalgo.trees.MinHeap;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 public class AdjMatrixGraph<V> implements IGraph<V, Double> {
 
-    private BiMap<V, Integer> vertices;
+    private Map<V, Integer> vertices;
+    private Map<Integer, V> inverse;
     private Double[][] edges;
     private int count;
 
     public AdjMatrixGraph(int vertices) {
-        this.vertices = HashBiMap.create();
+        this.vertices = new LinkedHashMap<>();
+        this.inverse = new HashMap<>();
         edges = new Double[vertices][vertices];
+
+        for (Double[] edge : edges) Arrays.fill(edge, 0.0);
         count = 0;
     }
 
     @Override
     public void addVertex(V ele) {
-        vertices.put(ele, count++);
+        vertices.put(ele, count);
+        inverse.put(count, ele);
+        count++;
     }
 
     @Override
@@ -51,6 +59,7 @@ public class AdjMatrixGraph<V> implements IGraph<V, Double> {
         }
 
         vertices.remove(ele);
+        inverse.remove(i);
         count--;
     }
 
@@ -69,18 +78,18 @@ public class AdjMatrixGraph<V> implements IGraph<V, Double> {
         s.push(root);
 
         while (!s.isEmpty()) {
-            V ele = s.peek();
-            if (!visited.contains(ele)) {
-                visited.add(ele);
-            } else {
-                s.pop();
-                int i = vertices.get(ele);
+            V ele = s.pop();
+            if (visited.contains(ele)) {
+                continue;
+            }
 
-                for (V other : vertices.keySet()) {
-                    int j = vertices.get(other);
-                    if (edges[i][j] != 0 && !visited.contains(other)) {
-                        s.push(other);
-                    }
+            visited.add(ele);
+            int i = vertices.get(ele);
+
+            for (V other : vertices.keySet()) {
+                int j = vertices.get(other);
+                if (edges[i][j] != 0.0) {
+                    s.push(other);
                 }
             }
         }
@@ -89,24 +98,23 @@ public class AdjMatrixGraph<V> implements IGraph<V, Double> {
 
     @Override
     public Set<V> getBFS(V root) {
-        Queue<V> s = new LinkedList<>();
+        Queue<V> q = new LinkedList<>();
         Set<V> visited = new LinkedHashSet<>();
 
-        s.add(root);
+        q.add(root);
 
-        while (!s.isEmpty()) {
-            V ele = s.peek();
-            if (!visited.contains(ele)) {
-                visited.add(ele);
-            } else {
-                s.remove();
-                int i = vertices.get(ele);
+        while (!q.isEmpty()) {
+            V ele = q.remove();
+            if (visited.contains(ele)) {
+                continue;
+            }
+            visited.add(ele);
+            int i = vertices.get(ele);
 
-                for (V other : vertices.keySet()) {
-                    int j = vertices.get(other);
-                    if (edges[i][j] != 0 && !visited.contains(other)) {
-                        s.add(other);
-                    }
+            for (V other : vertices.keySet()) {
+                int j = vertices.get(other);
+                if (j != i && edges[i][j] != 0.0) {
+                    q.add(other);
                 }
             }
         }
@@ -144,9 +152,9 @@ public class AdjMatrixGraph<V> implements IGraph<V, Double> {
                 int vIndex = vertices.get(currEle);
                 for (int i = 0; i < edges.length; i++) {
                     if (i != vIndex) {
-                        Double dist = edges[vIndex][i] == null || edges[vIndex][i] == 0.0 ? null : weight + edges[vIndex][i];
+                        Double dist = edges[vIndex][i] == 0.0 ? null : weight + edges[vIndex][i];
 
-                        V destVertex = vertices.inverse().get(i);
+                        V destVertex = inverse.get(i);
                         if (dist != null && (shortestPath.isNotDefined(destVertex) || dist < shortestPath.getDistance(destVertex))) {
                             shortestPath.setParent(destVertex, currEle, dist);
 
