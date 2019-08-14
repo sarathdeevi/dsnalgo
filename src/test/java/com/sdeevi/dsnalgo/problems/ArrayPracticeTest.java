@@ -3,6 +3,7 @@ package com.sdeevi.dsnalgo.problems;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ArrayPracticeTest {
@@ -76,5 +77,11 @@ public class ArrayPracticeTest {
         //Sorted array = 40, 100, 180, 260, 310, 535, 695
         int val = ArrayPractice.getKthLargestElementUsingMinHeap(a, 3, 2, 6);
         assertThat(val, Matchers.equalTo(310));
+    }
+
+    @Test
+    public void knapsackSolution() {
+        assertThat(ArrayPractice.knapsackSolution(9, new int[]{1, 2, 3, 5}, new int[]{4, 3, 1, 5}), is(new int[]{1, 1, 0, 1}));
+        assertThat(ArrayPractice.knapsackSolution(45, new int[]{5, 10, 15, 18, 20}, new int[]{10, 4, 5, 7, 3}), is(new int[]{1, 0, 1, 1, 0}));
     }
 }

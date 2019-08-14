@@ -7,6 +7,9 @@ apply plugin: 'java'
 
 dependencies {
     compile group: 'com.google.collections', name: 'google-collections', version: '1.0-rc2'
+    compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.1.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
 
     testCompile('junit:junit:4.12'){
         exclude group: 'org.hamcrest'

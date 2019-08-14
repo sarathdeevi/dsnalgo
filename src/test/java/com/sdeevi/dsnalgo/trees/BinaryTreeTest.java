@@ -3,6 +3,7 @@ package com.sdeevi.dsnalgo.trees;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.sdeevi.dsnalgo.trees.BinaryTree.Node;
@@ -514,9 +515,14 @@ public class BinaryTreeTest {
     }
 
     @Test
-    public void isCousinSingleRecursiona_thenReturnsTrueIfCousin() {
+    public void isCousinSingleRecursion_thenReturnsTrueIfCousin() {
         assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.right.left), is(true));
         assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.left.left), is(false));
         assertThat(sampleTree1.isCousinSingleRecursion(sampleTree1.root.left.right, sampleTree1.root.right), is(false));
+    }
+
+    @Test
+    public void getExtremeZigZagNodes_thenReturnsTrueIfCousin() {
+        assertThat(sampleTree1.getExtremeZigZagNodes(), is(Arrays.asList(1, 2, 7, 8)));
     }
 }

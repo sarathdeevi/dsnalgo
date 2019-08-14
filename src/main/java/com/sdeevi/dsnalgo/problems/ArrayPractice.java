@@ -8,6 +8,50 @@ import java.util.Arrays;
 
 public class ArrayPractice {
 
+    public static int[] knapsackSolution(int totalWeight, int[] weights, int[] values) {
+        int[][] a = new int[weights.length][totalWeight + 1];
+        int[] solution = new int[weights.length];
+        Arrays.fill(solution, 0);
+
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < totalWeight + 1; j++) {
+                if (j == 0) {
+                    a[i][j] = 0;
+                } else if (i == 0) {
+                    a[i][j] = j < weights[0] ? 0 : values[0];
+                } else if (j < weights[i]) {
+                    a[i][j] = a[i - 1][j];
+                } else {
+                    int remWeight = j - weights[i];
+                    a[i][j] = Math.max(a[i - 1][j], values[i] + a[i - 1][remWeight]);
+                }
+            }
+        }
+        int i = weights.length - 1;
+        int j = totalWeight;
+        while (i >= 0) {
+            if (i == 0) {
+                solution[i] = 1;
+            } else if (a[i][j] != a[i - 1][j]) {
+                solution[i] = 1;
+                int weightDiff = a[i][j] - values[i];
+
+                j = lastIndex(a[i - 1], weightDiff);
+            }
+            i--;
+        }
+        return solution;
+    }
+
+    private static int lastIndex(int[] a, int key) {
+        int k = a.length - 1;
+        while (k >= 0) {
+            if (a[k] == key) return k;
+            k--;
+        }
+        return -1;
+    }
+
     public static void rotateArrayOrderNk(int[] a, int k) {
         while (k > 0) {
             int i;
@@ -106,6 +150,7 @@ public class ArrayPractice {
         return numTransactions > 0 ? sb.toString().trim() : "No Profit";
     }
 
+    // TODO: Finish dp solution
     public static String getBuySellStockOptimizationInFixedTransactions(int[] prices, int k) {
         return null;
     }
@@ -123,6 +168,7 @@ public class ArrayPractice {
         return min;
     }
 
+    // TODO: Fix this
     public static int getKthLargestElement(int[] a, int k, int low, int high) {
         if (k > 0 && k <= high - low + 1) {
             int pos = partition(a, low, high);
@@ -139,7 +185,7 @@ public class ArrayPractice {
     }
 
     public static int getKthLargestElementUsingMinHeap(int[] a, int k, int low, int high) {
-        MinHeap minHeap = new MinHeap(high - low + 1);
+        MinHeap<Integer> minHeap = new MinHeap<>(high - low + 1);
         for (int i = low; i <= high; i++) {
             minHeap.add(a[i]);
         }

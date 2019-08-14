@@ -911,6 +911,43 @@ public class BinaryTree {
                 || isSibling(n.left, n1, n2) || isSibling(n.right, n1, n2);
     }
 
+    public List<Integer> getExtremeZigZagNodes() {
+        List<Integer> elements = new ArrayList<>();
+        if (root == null) return elements;
+        Node n = root, prev = null;
+        Queue<Node> q = new LinkedList<>();
+        q.add(n);
+        q.add(null);
+
+        int level = 0;
+        while (!q.isEmpty()) {
+            Node temp = q.remove();
+
+            if (temp != null && level % 2 != 0 && prev == null) {
+                elements.add(temp.data);
+            }
+            if (temp == null && level % 2 == 0) {
+                elements.add(prev.data);
+            }
+
+            if (temp == null) {
+                if (q.peek() != null) {
+                    q.add(null);
+                }
+                level++;
+            } else {
+                if (temp.left != null) {
+                    q.add(temp.left);
+                }
+                if (temp.right != null) {
+                    q.add(temp.right);
+                }
+            }
+            prev = temp;
+        }
+        return elements;
+    }
+
     public static class Builder {
 
         private Builder() {

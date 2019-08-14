@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class BSTTest {
@@ -66,6 +67,15 @@ public class BSTTest {
     }
 
     @Test
+    public void sumOfkSmallestElements_thenReturnsKthSmallestElement() {
+        // [1, 2, 3, 8, 10, 12, 20, 25, 29, 29]
+
+        assertThat(sampleBST.sumOfKSmallestElements(2), is(3));
+        assertThat(sampleBST.sumOfKSmallestElements(10), is(139));
+        assertThat(sampleBST.sumOfKSmallestElements(12), is(Integer.MAX_VALUE));
+    }
+
+    @Test
     public void kthLargestElement_thenReturnsKthSmallestElement() {
         // [1, 2, 3, 8, 10, 12, 20, 25, 29, 29]
 
@@ -84,12 +94,33 @@ public class BSTTest {
                1      8       12     29
                  2                 25  29
          */
-        assertThat(sampleBST.lowestCommonAncestor(2, 12), is(10));
-        assertThat(sampleBST.lowestCommonAncestor(1, 2), is(1));
-        assertThat(sampleBST.lowestCommonAncestor(8, 2), is(3));
         assertThat(sampleBST.lowestCommonAncestor(8, 25), is(10));
         assertThat(sampleBST.lowestCommonAncestor(12, 29), is(20));
         assertThat(sampleBST.lowestCommonAncestor(12, 43), is(2147483647));
         assertThat(sampleBST.lowestCommonAncestor(7, 8), is(2147483647));
+
+        assertThat(sampleBST.lowestCommonAncestorRecursive(8, 25), is(10));
+        assertThat(sampleBST.lowestCommonAncestorRecursive(12, 29), is(20));
+        assertThat(sampleBST.lowestCommonAncestor(12, 43), is(2147483647));
+        assertThat(sampleBST.lowestCommonAncestor(7, 8), is(2147483647));
+    }
+
+    @Test
+    public void searchRecursive_thenReturnsNodeIfFound() {
+        assertThat(sampleBST.searchRecursive(3).data, is(3));
+        assertThat(sampleBST.searchRecursive(21), is(nullValue()));
+        assertThat(sampleBST.searchRecursive(25).data, is(25));
+    }
+
+    @Test
+    public void correctBSTWithTwoSwappedNodes_thenCorrectsBST() {
+        sampleBST.root.left.right.data = 20;
+        sampleBST.root.right.data = 8;
+
+        // Note 20 and 8 are in the wrong position
+        assertThat(sampleBST.getInOrder().toString(), is("[1, 2, 3, 20, 10, 12, 8, 25, 29, 29]"));
+
+//        sampleBST.correctBSTWithTwoSwappedNodes();
+        assertThat(sampleBST.getInOrder().toString(), is("[1, 2, 3, 8, 10, 12, 20, 25, 29, 29]"));
     }
 }

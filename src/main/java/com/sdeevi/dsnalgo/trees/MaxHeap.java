@@ -1,14 +1,14 @@
 package com.sdeevi.dsnalgo.trees;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
-public class MaxHeap {
+public class MaxHeap<V extends Comparable> {
 
-    private Vector<Integer> heap;
+    private ArrayList<V> heap;
     private int maxSize;
 
     public MaxHeap(int maxSize) {
-        this.heap = new Vector<>(maxSize);
+        this.heap = new ArrayList<>(maxSize);
         this.maxSize = maxSize;
     }
 
@@ -29,9 +29,9 @@ public class MaxHeap {
     }
 
     private void swap(int i, int j) {
-        int tmp = heap.get(i);
-        heap.setElementAt(heap.get(j), i);
-        heap.setElementAt(tmp, j);
+        V tmp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, tmp);
     }
 
     private void heapifyDown(int pos) {
@@ -41,11 +41,11 @@ public class MaxHeap {
 
             int largest = pos;
 
-            if (left < heap.size() && heap.get(left) > heap.get(pos)) {
+            if (left < heap.size() && heap.get(left).compareTo(heap.get(pos)) > 0) {
                 largest = left;
             }
 
-            if (right < heap.size() && heap.get(right) > heap.get(largest)) {
+            if (right < heap.size() && heap.get(right).compareTo(heap.get(largest)) > 0) {
                 largest = right;
             }
 
@@ -57,7 +57,7 @@ public class MaxHeap {
     }
 
     private void heapifyUp(int pos) {
-        if (pos > 0 && heap.get(parent(pos)) < heap.get(pos)) {
+        if (pos > 0 && heap.get(parent(pos)).compareTo(heap.get(pos)) < 0) {
             swap(pos, parent(pos));
             heapifyUp(parent(pos));
         }
@@ -67,18 +67,18 @@ public class MaxHeap {
         return heap.size();
     }
 
-    public void add(int element) {
+    public void add(V element) {
         if (size() >= maxSize) return;
 
-        heap.addElement(element);
+        heap.add(element);
         int index = size() - 1;
 
         heapifyUp(index);
     }
 
-    public int remove() {
-        int popped = heap.firstElement();
-        heap.setElementAt(heap.lastElement(), 0);
+    public V remove() {
+        V popped = heap.get(0);
+        heap.set(0, heap.get(heap.size() - 1));
         heap.remove(size() - 1);
         heapifyDown(0);
 

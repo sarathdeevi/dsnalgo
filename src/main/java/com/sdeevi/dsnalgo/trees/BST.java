@@ -6,6 +6,8 @@ import java.util.Stack;
 
 public class BST {
 
+    Node root;
+
     /*
     Auxiliary variables for some examples. Not safe for multi-threaded scenarios
      */
@@ -13,8 +15,7 @@ public class BST {
     private Node kthSmallestNode;
     private int kthLargestElementCount;
     private Node kthLargestNode;
-
-    private Node root;
+    private int sumOfKSmallestElements;
 
     public void add(int ele) {
         if (root == null) {
@@ -99,6 +100,14 @@ public class BST {
         kthSmallestElement(n.right);
     }
 
+    public int sumOfKSmallestElements(int k) {
+        sumOfKSmallestElements = 0;
+        kthSmallestElementCount = k;
+
+        sumOfKSmallestElements(root, k);
+        return kthSmallestElementCount != 0 ? Integer.MAX_VALUE : sumOfKSmallestElements;
+    }
+
     public int kthSmallestElementIterative(int k) {
         if (root == null) return Integer.MAX_VALUE;
 
@@ -146,15 +155,13 @@ public class BST {
 //    public BST merge(BST tree2) {
 //
 //    }
-
+//
 //    private Node merge(Node n1, Node n2) {
 //        Node n;
 //        Node curr1 = n1, curr2 = n2;
-//        if (n1.data < n2.data) {
-//            n = n1;
-//            curr1 = n1.left;
+//        if (curr1.data < curr2.data) {
+//            curr1 = curr1.left;
 //        } else {
-//            n = n2;
 //            curr2 = curr2.left;
 //        }
 //    }
@@ -175,6 +182,20 @@ public class BST {
         return Integer.MAX_VALUE;
     }
 
+    private void sumOfKSmallestElements(Node n, int k) {
+        if (n == null) return;
+        sumOfKSmallestElements(n.left, k);
+        if (kthSmallestElementCount != 0) {
+            sumOfKSmallestElements += n.data;
+            kthSmallestElementCount--;
+        }
+        sumOfKSmallestElements(n.right, k);
+    }
+
+    public int lowestCommonAncestorRecursive(int k1, int k2) {
+        return lowestCommonAncestorRecursive(root, k1, k2);
+    }
+
     private Node search(Node n, int val) {
         Node curr = n;
         while (curr != null) {
@@ -187,6 +208,50 @@ public class BST {
             }
         }
         return null;
+    }
+
+    private int lowestCommonAncestorRecursive(Node n, int k1, int k2) {
+        if (n == null) return Integer.MAX_VALUE;
+        if (k1 < n.data && k2 < n.data) {
+            return lowestCommonAncestorRecursive(n.left, k1, k2);
+        } else if (k1 > n.data && k2 > n.data) {
+            return lowestCommonAncestorRecursive(n.right, k1, k2);
+        } else {
+            Node k1Node = searchRecursive(n, k1);
+            Node k2Node = searchRecursive(n, k2);
+            return k1Node != null && k2Node != null ? n.data : Integer.MAX_VALUE;
+        }
+    }
+
+    public Node searchRecursive(int val) {
+        return searchRecursive(root, val);
+    }
+
+    private Node searchRecursive(Node n, int val) {
+        if (n == null) return null;
+        if (n.data == val) return n;
+
+        if (val < n.data) return searchRecursive(n.left, val);
+        if (val > n.data) return searchRecursive(n.right, val);
+        return null;
+    }
+
+//    public void correctBSTWithTwoSwappedNodes() {
+//        Node wrongNodeInLeftSubTree =
+//    }
+//
+//    private Node getNodeGreaterThanInLeftSubTree(Node n) {
+//        if (n == null) return null;
+//        if (n.left.data > n.data) return n;
+//
+//        getNodeGreaterThanInLeftSubTree(n.left);
+//        getNodeGreaterThanInLeftSubTree(n.right);
+//    }
+
+    private void swap(Node n1, Node n2) {
+        int temp = n1.data;
+        n1.data = n2.data;
+        n2.data = temp;
     }
 
     public static class Node {
