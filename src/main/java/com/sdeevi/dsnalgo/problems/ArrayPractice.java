@@ -185,7 +185,7 @@ public class ArrayPractice {
     }
 
     public static int getKthLargestElementUsingMinHeap(int[] a, int k, int low, int high) {
-        MinHeap<Integer> minHeap = new MinHeap<>(high - low + 1);
+        MinHeap<Integer> minHeap = new MinHeap<>();
         for (int i = low; i <= high; i++) {
             minHeap.add(a[i]);
         }

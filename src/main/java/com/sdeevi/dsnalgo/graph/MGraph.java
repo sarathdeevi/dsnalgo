@@ -1,6 +1,5 @@
 package com.sdeevi.dsnalgo.graph;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -152,17 +151,17 @@ public class MGraph<V> implements IGraph<V, Double> {
         return true;
     }
 
-    public ShortestPathResult<V> getShortestPathsDijsktra(V src) {
-        ShortestPathResult<V> shortestPathResult = new ShortestPathResult<>();
+    public ShortestPath<V> getShortestPathsDijsktra(V src) {
+        ShortestPath<V> shortestPath = new ShortestPath<>();
         Set<V> visited = Sets.newHashSet();
 
         V currEle;
         PriorityQueue<AdjNode<V>> q = new PriorityQueue<>(Comparator.comparing(x -> x.weight));
 
         q.add(new AdjNode<>(src, 0.0));
-        shortestPathResult.setParent(src, null);
+        shortestPath.setParent(src, null, 0.0);
 
-        while (q.size() > 0) {
+        while (!q.isEmpty()) {
             AdjNode<V> c = q.remove();
             currEle = c.vertex;
 
@@ -173,53 +172,16 @@ public class MGraph<V> implements IGraph<V, Double> {
                     V dest = adjNode.vertex;
                     Double weight = adjNode.weight;
 
-                    Double dist = weight + shortestPathResult.getDistance(currEle);
-                    if (!shortestPathResult.isDistanceDefined(dest) || shortestPathResult.getDistance(dest) > dist) {
-                        shortestPathResult.setDistance(dest, dist);
+                    Double dist = weight + shortestPath.getDistance(currEle);
+                    if (shortestPath.isNotDefined(dest) || shortestPath.getDistance(dest) > dist) {
+                        shortestPath.setParent(dest, currEle, dist);
 
-                        shortestPathResult.setParent(dest, currEle);
                         q.add(new AdjNode<>(dest, dist));
                     }
                 }
             }
         }
-        return shortestPathResult;
-    }
-
-    static class ShortestPathResult<V> {
-        private Map<V, V> parents = new HashMap<>();
-        private Map<V, Double> distances = new HashMap<>();
-
-        private void setParent(V ele, V parent) {
-            parents.put(ele, parent);
-        }
-
-        private void setDistance(V ele, Double distance) {
-            distances.put(ele, distance);
-        }
-
-        List<V> getPath(V ele) {
-            LinkedList<V> path = Lists.newLinkedList();
-
-            V curr = ele;
-            while (curr != null) {
-                V parent = parents.get(curr);
-                if (parent != null) {
-                    path.addFirst(parent);
-                }
-                curr = parent;
-            }
-            if (path.size() > 0) path.addLast(ele);
-            return path;
-        }
-
-        private boolean isDistanceDefined(V ele) {
-            return parents.containsKey(ele);
-        }
-
-        Double getDistance(V ele) {
-            return distances.getOrDefault(ele, 0.0);
-        }
+        return shortestPath;
     }
 
     private static class AdjNode<V> {

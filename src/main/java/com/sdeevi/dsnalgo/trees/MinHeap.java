@@ -5,11 +5,9 @@ import java.util.ArrayList;
 public class MinHeap<V extends Comparable> {
 
     private ArrayList<V> heap;
-    private int maxSize;
 
-    public MinHeap(int maxSize) {
+    public MinHeap() {
         this.heap = new ArrayList<>();
-        this.maxSize = maxSize;
     }
 
     private int parent(int pos) {
@@ -67,9 +65,11 @@ public class MinHeap<V extends Comparable> {
         return heap.size();
     }
 
-    public void add(V element) {
-        if (size() >= maxSize) return;
+    public boolean isEmpty() {
+        return heap.size() == 0;
+    }
 
+    public void add(V element) {
         heap.add(element);
         int index = size() - 1;
 

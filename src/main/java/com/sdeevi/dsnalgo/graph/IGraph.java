@@ -1,7 +1,5 @@
 package com.sdeevi.dsnalgo.graph;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface IGraph<T, Weight> {
@@ -33,4 +31,6 @@ public interface IGraph<T, Weight> {
     boolean isAcyclic();
 
     boolean isDirectedAcyclic();
+
+    ShortestPath<T> getShortestPathsDijsktra(T src);
 }

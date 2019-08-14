@@ -3,6 +3,8 @@ package com.sdeevi.dsnalgo.graph;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -106,5 +108,68 @@ public class AdjMatrixGraphTest {
 
         graph.addEdge(30, 10);
         assertThat(graph.isDirectedAcyclic(), is(false));
+    }
+
+    @Test
+    public void getShortestPathsDijsktra() {
+        AdjMatrixGraph<Integer> graph = new AdjMatrixGraph<>(8);
+
+        graph.addVertex(1);
+        graph.addVertex(2);
+        graph.addVertex(3);
+        graph.addVertex(4);
+        graph.addVertex(5);
+        graph.addVertex(6);
+        graph.addVertex(7);
+        graph.addVertex(8);
+
+        graph.addEdgeUndirected(1, 2, 10.0);
+        graph.addEdgeUndirected(1, 3, 1.0);
+        graph.addEdgeUndirected(2, 5, 14.0);
+        graph.addEdgeUndirected(3, 2, 4.0);
+        graph.addEdgeUndirected(3, 4, 5.0);
+        graph.addEdgeUndirected(3, 5, 18.0);
+        graph.addEdgeUndirected(4, 5, 1.0);
+        graph.addEdgeUndirected(5, 6, 1.0);
+        graph.addEdgeUndirected(4, 6, 6.0);
+        graph.addEdgeUndirected(6, 7, 2.0);
+        graph.addEdgeUndirected(4, 7, 1.0);
+
+        ShortestPath<Integer> shortestPath = graph.getShortestPathsDijsktra(1);
+
+        assertThat(shortestPath.getPath(1), is(emptyList()));
+        assertThat(shortestPath.getPath(2), is(asList(1, 3, 2)));
+        assertThat(shortestPath.getPath(3), is(asList(1, 3)));
+        assertThat(shortestPath.getPath(4), is(asList(1, 3, 4)));
+        assertThat(shortestPath.getPath(5), is(asList(1, 3, 4, 5)));
+        assertThat(shortestPath.getPath(6), is(asList(1, 3, 4, 5, 6)));
+        assertThat(shortestPath.getPath(7), is(asList(1, 3, 4, 7)));
+        assertThat(shortestPath.getPath(8), is(emptyList()));
+
+        assertThat(shortestPath.getDistance(1), is(0.0));
+        assertThat(shortestPath.getDistance(2), is(5.0));
+        assertThat(shortestPath.getDistance(3), is(1.0));
+        assertThat(shortestPath.getDistance(4), is(6.0));
+        assertThat(shortestPath.getDistance(5), is(7.0));
+        assertThat(shortestPath.getDistance(6), is(8.0));
+        assertThat(shortestPath.getDistance(7), is(7.0));
+
+        shortestPath = graph.getShortestPathsDijsktra(5);
+
+        assertThat(shortestPath.getPath(1), is(asList(5, 4, 3, 1)));
+        assertThat(shortestPath.getPath(2), is(asList(5, 4, 3, 2)));
+        assertThat(shortestPath.getPath(3), is(asList(5, 4, 3)));
+        assertThat(shortestPath.getPath(4), is(asList(5, 4)));
+        assertThat(shortestPath.getPath(5), is(emptyList()));
+        assertThat(shortestPath.getPath(6), is(asList(5, 6)));
+        assertThat(shortestPath.getPath(7), is(asList(5, 4, 7)));
+
+        assertThat(shortestPath.getDistance(1), is(7.0));
+        assertThat(shortestPath.getDistance(2), is(10.0));
+        assertThat(shortestPath.getDistance(3), is(6.0));
+        assertThat(shortestPath.getDistance(4), is(1.0));
+        assertThat(shortestPath.getDistance(5), is(0.0));
+        assertThat(shortestPath.getDistance(6), is(1.0));
+        assertThat(shortestPath.getDistance(7), is(2.0));
     }
 }

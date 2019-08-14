@@ -141,41 +141,41 @@ public class MGraphTest {
         graph.addEdgeUndirected(6, 7, 2.0);
         graph.addEdgeUndirected(4, 7, 1.0);
 
-        MGraph.ShortestPathResult<Integer> shortestPathResult = graph.getShortestPathsDijsktra(1);
+        ShortestPath<Integer> shortestPath = graph.getShortestPathsDijsktra(1);
 
-        assertThat(shortestPathResult.getPath(1), is(emptyList()));
-        assertThat(shortestPathResult.getPath(2), is(asList(1, 3, 2)));
-        assertThat(shortestPathResult.getPath(3), is(asList(1, 3)));
-        assertThat(shortestPathResult.getPath(4), is(asList(1, 3, 4)));
-        assertThat(shortestPathResult.getPath(5), is(asList(1, 3, 4, 5)));
-        assertThat(shortestPathResult.getPath(6), is(asList(1, 3, 4, 5, 6)));
-        assertThat(shortestPathResult.getPath(7), is(asList(1, 3, 4, 7)));
-        assertThat(shortestPathResult.getPath(8), is(emptyList()));
+        assertThat(shortestPath.getPath(1), is(emptyList()));
+        assertThat(shortestPath.getPath(2), is(asList(1, 3, 2)));
+        assertThat(shortestPath.getPath(3), is(asList(1, 3)));
+        assertThat(shortestPath.getPath(4), is(asList(1, 3, 4)));
+        assertThat(shortestPath.getPath(5), is(asList(1, 3, 4, 5)));
+        assertThat(shortestPath.getPath(6), is(asList(1, 3, 4, 5, 6)));
+        assertThat(shortestPath.getPath(7), is(asList(1, 3, 4, 7)));
+        assertThat(shortestPath.getPath(8), is(emptyList()));
 
-        assertThat(shortestPathResult.getDistance(1), is(0.0));
-        assertThat(shortestPathResult.getDistance(2), is(5.0));
-        assertThat(shortestPathResult.getDistance(3), is(1.0));
-        assertThat(shortestPathResult.getDistance(4), is(6.0));
-        assertThat(shortestPathResult.getDistance(5), is(7.0));
-        assertThat(shortestPathResult.getDistance(6), is(8.0));
-        assertThat(shortestPathResult.getDistance(7), is(7.0));
+        assertThat(shortestPath.getDistance(1), is(0.0));
+        assertThat(shortestPath.getDistance(2), is(5.0));
+        assertThat(shortestPath.getDistance(3), is(1.0));
+        assertThat(shortestPath.getDistance(4), is(6.0));
+        assertThat(shortestPath.getDistance(5), is(7.0));
+        assertThat(shortestPath.getDistance(6), is(8.0));
+        assertThat(shortestPath.getDistance(7), is(7.0));
 
-        shortestPathResult = graph.getShortestPathsDijsktra(5);
+        shortestPath = graph.getShortestPathsDijsktra(5);
 
-        assertThat(shortestPathResult.getPath(1), is(asList(5, 4, 3, 1)));
-        assertThat(shortestPathResult.getPath(2), is(asList(5, 4, 3, 2)));
-        assertThat(shortestPathResult.getPath(3), is(asList(5, 4, 3)));
-        assertThat(shortestPathResult.getPath(4), is(asList(5, 4)));
-        assertThat(shortestPathResult.getPath(5), is(emptyList()));
-        assertThat(shortestPathResult.getPath(6), is(asList(5, 6)));
-        assertThat(shortestPathResult.getPath(7), is(asList(5, 4, 7)));
+        assertThat(shortestPath.getPath(1), is(asList(5, 4, 3, 1)));
+        assertThat(shortestPath.getPath(2), is(asList(5, 4, 3, 2)));
+        assertThat(shortestPath.getPath(3), is(asList(5, 4, 3)));
+        assertThat(shortestPath.getPath(4), is(asList(5, 4)));
+        assertThat(shortestPath.getPath(5), is(emptyList()));
+        assertThat(shortestPath.getPath(6), is(asList(5, 6)));
+        assertThat(shortestPath.getPath(7), is(asList(5, 4, 7)));
 
-        assertThat(shortestPathResult.getDistance(1), is(7.0));
-        assertThat(shortestPathResult.getDistance(2), is(10.0));
-        assertThat(shortestPathResult.getDistance(3), is(6.0));
-        assertThat(shortestPathResult.getDistance(4), is(1.0));
-        assertThat(shortestPathResult.getDistance(5), is(0.0));
-        assertThat(shortestPathResult.getDistance(6), is(1.0));
-        assertThat(shortestPathResult.getDistance(7), is(2.0));
+        assertThat(shortestPath.getDistance(1), is(7.0));
+        assertThat(shortestPath.getDistance(2), is(10.0));
+        assertThat(shortestPath.getDistance(3), is(6.0));
+        assertThat(shortestPath.getDistance(4), is(1.0));
+        assertThat(shortestPath.getDistance(5), is(0.0));
+        assertThat(shortestPath.getDistance(6), is(1.0));
+        assertThat(shortestPath.getDistance(7), is(2.0));
     }
 }
