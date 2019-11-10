@@ -1,0 +1,22 @@
+class CommandExecutorFactory {
+    public CommandExecutor getCommandExecutor(String rawCommand, {{appName}}Service service) {
+        CommandExecutor executor;
+        String[] commandArgs = rawCommand.split(" ");
+        Command command = extractCommand(rawCommand);
+        switch (command) {
+            {{cases}}
+            default:
+                throw new InvalidCommandException(String.format("Invalid Command %s", commandArgs[0]));
+        }
+        return executor;
+    }
+
+    private Command extractCommand(String rawCommand) {
+        Command command = Command.fromString(rawCommand);
+
+        if (command == null) {
+            throw new InvalidCommandException(String.format("Invalid command %s", rawCommand));
+        }
+        return command;
+    }
+}

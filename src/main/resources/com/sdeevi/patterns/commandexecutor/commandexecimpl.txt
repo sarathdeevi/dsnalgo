@@ -1,0 +1,23 @@
+class {{name}}CommandExecutor implements CommandExecutor {
+    private {{appName}}Service service;
+    private String[] commandParams;
+
+    public {{name}}CommandExecutor({{appName}}Service service, String[] commandParams) {
+        this.service = service;
+        this.commandParams = commandParams;
+    }
+
+    @Override
+    public void validate() {
+        if (commandParams.length != {{numArgs}} || StringArrayUtils.isAnyEmpty(commandParams)) {
+            throw new InvalidCommandException("Wrong parameters");
+        }
+    }
+
+    @Override
+    public String execute() {
+        String param = commandParams[1];
+
+        return service.execute{{name}}(param);
+    }
+}

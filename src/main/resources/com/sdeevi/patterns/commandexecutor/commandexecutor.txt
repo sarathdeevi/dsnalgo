@@ -1,0 +1,5 @@
+interface CommandExecutor {
+    void validate();
+
+    String execute();
+}

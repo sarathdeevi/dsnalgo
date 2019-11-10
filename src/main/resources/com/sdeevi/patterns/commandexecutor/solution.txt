@@ -1,0 +1,21 @@
+public class Solution {
+    private {{appName}}CommandExecutorService commandExecutorService;
+
+    public Solution({{appName}}CommandExecutorService commandExecutorService) {
+        this.commandExecutorService = commandExecutorService;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution(new {{appName}}CommandExecutorService());
+        solution.executeCommandLineCommands();
+    }
+
+    private void executeCommandLineCommands() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (scanner.hasNextLine()) {
+                String rawCommand = scanner.nextLine();
+                System.out.println(commandExecutorService.executeCommand(rawCommand));
+            }
+        }
+    }
+}

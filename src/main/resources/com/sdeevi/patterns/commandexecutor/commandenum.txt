@@ -1,0 +1,25 @@
+enum Command {
+    {{enumValues}}
+
+    private static final Map<String, Command> COMMAND_MAPPER = new HashMap<>();
+
+    static {
+        for (Command command : Command.values()) {
+            COMMAND_MAPPER.put(command.toString(), command);
+        }
+    }
+
+    private final String command;
+
+    Command(String command) {
+        this.command = command;
+    }
+
+    public static Command fromString(String command) {
+        return COMMAND_MAPPER.get(command);
+    }
+
+    public String toString() {
+        return command;
+    }
+}

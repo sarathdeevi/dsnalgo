@@ -1,0 +1,29 @@
+class {{appName}}CommandExecutorService {
+
+    private CommandExecutorFactory commandExecutorFactory;
+    private {{appName}}Service service;
+
+    public {{appName}}CommandExecutorService() {
+        this(new CommandExecutorFactory(), new {{appName}}Service());
+    }
+
+    public {{appName}}CommandExecutorService(
+            CommandExecutorFactory commandExecutorFactory,
+            {{appName}}Service service) {
+        this.commandExecutorFactory = commandExecutorFactory;
+        this.service = service;
+    }
+
+    public String executeCommand(String rawCommand) {
+        String result;
+        try {
+            CommandExecutor commandExecutor = commandExecutorFactory.getCommandExecutor(rawCommand, service);
+            commandExecutor.validate();
+            return commandExecutor.execute();
+        } catch (InvalidCommandException exception) {
+            result = String.format("Invalid Command : %s", exception.getMessage());
+        }
+        return result;
+    }
+}
+

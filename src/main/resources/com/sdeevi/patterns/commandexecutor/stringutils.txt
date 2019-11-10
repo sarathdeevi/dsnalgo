@@ -1,0 +1,15 @@
+final class StringArrayUtils {
+    private StringArrayUtils() {
+    }
+
+    public static boolean isAnyEmpty(String[] commandParams) {
+        boolean isAnyEmpty = false;
+        for (String commandParam : commandParams) {
+            isAnyEmpty = commandParam == null || commandParam.equals("");
+            if (isAnyEmpty) {
+                break;
+            }
+        }
+        return isAnyEmpty;
+    }
+}

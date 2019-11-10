@@ -1,0 +1,8 @@
+class {{appName}}Service {
+
+    public {{appName}}Service() {
+
+    }
+
+    {{methods}}
+}
